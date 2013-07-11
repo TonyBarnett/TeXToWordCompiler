@@ -322,7 +322,7 @@ namespace TexWordCompiler
                 // Gotta remove the escaped ones to only count the real ones.
                 string temp = line.Replace("\\{", "").Replace("\\}", "").Replace("\\\\", "");
 
-                int braces = 0; // keep a record of how many open braces we've seen
+                //int braces = 0; // keep a record of how many open braces we've seen
                 int listCounter = 0;
 
                 List<StringBuilder> sb = new List<StringBuilder>();
@@ -341,7 +341,7 @@ namespace TexWordCompiler
 
                             if (temp[i] == ' ')
                             {
-                                sb[braces].Append(miniSb.ToString());
+                                sb[listCounter].Append(miniSb.ToString());
                             }
                             else
                             {
@@ -352,14 +352,13 @@ namespace TexWordCompiler
                             break; //we'll skip over it without this
 
                         case '{':
-                            //sb[braces++].Append('{').AppendFormat(@"{0}", ++listCounter).Append('}');
-                            sb[braces].Append('{').AppendFormat(@"{0}", listCounter).Append('}');
-                            toFrom.Add(++listCounter, braces++);
                             sb.Add(new StringBuilder());
+                            toFrom.Add(sb.Count - 1, listCounter);
+                            sb[listCounter].Append('{').AppendFormat(@"{0}", sb.Count - 1).Append('}');
+                            listCounter = sb.Count - 1;
                             break;
                         case '}':
-
-                            braces--;
+                            listCounter = toFrom[listCounter];
                             break;
 
                         default:

@@ -82,7 +82,7 @@
     <Content Include="Xml.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Xml\Xml\Xml.csproj">
+    <ProjectReference Include="..\..\..\..\Google Drive\Repository\Xml\Xml\Xml.csproj">
       <Project>{AEC34151-BC94-409A-A637-A064EDA4E223}</Project>
       <Name>Xml</Name>
     </ProjectReference>

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TexWordCompiler", "TexWordCompiler\TexWordCompiler.csproj", "{A7CA4CE8-21EB-46E9-AF50-86704DCF7D46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xml", "..\Xml\Xml\Xml.csproj", "{AEC34151-BC94-409A-A637-A064EDA4E223}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xml", "..\..\..\Google Drive\Repository\Xml\Xml\Xml.csproj", "{AEC34151-BC94-409A-A637-A064EDA4E223}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

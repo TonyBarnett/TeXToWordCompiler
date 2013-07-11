@@ -11,3 +11,16 @@ T:\Google Drive\Repository\TexWordCompiler\TexWordCompiler\bin\Debug\Xml.dll
 T:\Google Drive\Repository\TexWordCompiler\TexWordCompiler\bin\Debug\Xml.pdb
 T:\Google Drive\Repository\TexWordCompiler\TexWordCompiler\bin\Debug\nunit.framework.dll
 T:\Google Drive\Repository\TexWordCompiler\TexWordCompiler\bin\Debug\nunit.framework.xml
+T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\obj\x86\Debug\TexWordCompiler.exe
+T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\obj\x86\Debug\TexWordCompiler.pdb
+T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\obj\x86\Debug\ResolveAssemblyReference.cache
+T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\obj\x86\Debug\TexWordCompiler.Form1.resources
+T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\obj\x86\Debug\TexWordCompiler.Properties.Resources.resources
+T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\obj\x86\Debug\ResGen.read.1.tlog
+T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\obj\x86\Debug\ResGen.write.1.tlog
+T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\bin\Debug\TexWordCompiler.exe
+T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\bin\Debug\TexWordCompiler.pdb
+T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\bin\Debug\nunit.framework.dll
+T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\bin\Debug\Xml.dll
+T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\bin\Debug\Xml.pdb
+T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\bin\Debug\nunit.framework.xml
