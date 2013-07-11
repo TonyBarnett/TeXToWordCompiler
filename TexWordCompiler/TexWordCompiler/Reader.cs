@@ -158,10 +158,13 @@ namespace TexWordCompiler
             /// </summary>
             public List<string> listEnvironment;
 
-            public TeX.ListType Type;
+            //public TeX.ListType ListType;
 
             Dictionary<int, int> toFrom = new Dictionary<int, int>();
 
+            public List<string> Output = new List<string>();
+
+            public List<string> Type = new List<string>();
             /// <summary>
             /// to do much later... work out how Word stores 
             /// equations or just work it out as text, for now 
@@ -316,8 +319,6 @@ namespace TexWordCompiler
                 //use braces to know if you're within a brace or not and then 
                 //assign to the correct list accordingly
 
-                List<string> type = new List<string>();
-                List<string> output = new List<string>();
 
                 // Gotta remove the escaped ones to only count the real ones.
                 string temp = line.Replace("\\{", "").Replace("\\}", "").Replace("\\\\", "");
@@ -334,6 +335,7 @@ namespace TexWordCompiler
                     {
                         case '\\':
                             StringBuilder miniSb = new StringBuilder();
+                            i++;
                             while (temp[i] != ' ' && temp[i] != '{' && i < temp.Length)
                             {
                                 miniSb.Append(temp[i++]);
@@ -345,7 +347,7 @@ namespace TexWordCompiler
                             }
                             else
                             {
-                                type.Add(miniSb.ToString());
+                                Type.Add(miniSb.ToString());
                             }
 
                             i--;// we're at a { or a space but when the loop counter increments 
@@ -369,7 +371,7 @@ namespace TexWordCompiler
 
                 foreach (StringBuilder s in sb)
                 {
-                    output.Add(s.ToString());
+                    Output.Add(s.ToString());
                 }
 
 
