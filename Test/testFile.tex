@@ -1,0 +1,584 @@
+\documentclass[a4paper,fleqn]{article}
+\usepackage{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{xspace}
+\usepackage{float}
+\usepackage[explicit]{titlesec}
+\usepackage[pdftex]{graphicx}
+	\graphicspath{{./images/}}
+
+
+% S T A N D A R D   C O M M A N D S
+\renewcommand{\leq}{\leqslant}
+\newcommand{\ie}{\emph{i.e.,\@\xspace}}
+\newcommand{\etc}{\emph{etc.\@\xspace}} 
+\newcommand{\cf}{\emph{cf.\@\xspace}}
+\newcommand{\eg}{\emph{e.g.,\@\xspace}}
+\newcommand{\etal}{\emph{et al.\@\xspace}}
+
+% L O C A L   S T Y L E
+
+% Margins
+\usepackage{a4wide}
+
+% Section title formatting
+\renewcommand{\section}{\newpage\stdsection}
+
+%referencing in the harvard style
+\usepackage[round,authoryear,comma]{natbib}
+\renewcommand{\cite}{\citep}
+% T O P M A T T E R
+\author{Anthony Barnett \\ \\Student number: 16007896}
+\title{Sustainable design and construction coursework}
+\date{ }
+%\date{\today}
+
+% Other
+\usepackage{longtable}
+
+\widowpenalty=3000 % prevent 'widows' and 'orphans'
+\clubpenalty=3000
+
+% D O C U M E N T
+\begin{document}
+%\maketitle
+%Breeam
+%Code for sustainable homes
+%Building regulations part L
+\section*{Part 1: Describe the various environmental, \emph{sustainability} and building energy standards/
+	laws/ regulations/ codes of practice with which you are required to comply.}
+%stdSection suppresses the linebreak before it... saves having just a section title on a page
+\stdsection*{a: the existing city centre building, assuming a large building of over 1,000m$^2$}
+
+Regulations and standards in the UK for the sustainable modification of existing buildings are:
+\begin{itemize}
+	\item building regulations part L1B \cite{Communities&LocalGovernment2010a}, and 
+		L2B \cite{Communities&LocalGovernment2010c}, 
+	\item parts six and seven of the building regulations \cite{Stunell2010} and, 
+	\item ska \cite{Brown2013}
+\end{itemize}
+
+\emph{Building regulations part L1B} detail sustainable measures required when modifying 
+an existing residential building. \emph{Building regulations part L2B} detail the measures 
+required when modifying an existing building. The guidelines for building 
+regulations part L were updated in 2012 \cite{Communities&LocalGovernment2013}. Part L of 
+building regulations specify five criteria \cite{RichardsPartingtonArchitects2011}:
+\begin{enumerate}
+	\item achieving the Target Emission Rate (TER), 
+	\item limits on design flexibility, 
+	\item limiting the effect of solar gain in summer, 
+	\item building performance consistent with Design Emissions Rate (DER) and, 
+	\item provisions for energy efficient operation of the dwelling. 
+\end{enumerate}
+
+The \emph{European Commission (EC) 20-20-20} set targets of reducing greenhouse gas emissions by 20\% of 1990 
+levels, and using 20\% renewable energy sources by 2020. To achieve this a target emissions rate was set for 
+buildings. To calculate the TER of a non-domestic building the emissions of a \emph{notional building} of the 
+same size and shape are calculated using modelling software, which complies with the National Calculation 
+Methodology (NCM) \cite{Communities&LocalGovernment2008}.
+
+The design flexibility constraint is enforced with the intention of forcing new build projects to be more 
+environmentally friendly. An example of constrained flexibility is that all materials used must 
+not exceed a specified U-value, dependant on the application of the material (party wall, exterior wall 
+\etc)
+
+To ensure the emissions of the building during the use-phase do no greatly exceed the DER, Post Occupancy 
+Evaluations (POE) are required. The intention of a POE is to ensure the building caters for all the requirements 
+of the building occupants. If a building does not fulfil the requirements of its occupants, it is likely that 
+the emissions of the building will increase. For example, if the temperature control does not provide an adequate 
+temperature, the occupants of the building will likely use space heaters which will increase the electricity 
+consumption of the building.
+
+\emph{Parts six and seven of the building regulations} detail requirements on energy and water efficiency. Mandatory 
+restrictions are placed on water consumption. Methods for calculation of CO$_2$ emissions and energy efficiency are 
+also specified against which a building is assessed.
+
+\emph{Ska} is a retrofit-only rating system and is maintained by the Royal Institute of Chartered Surveyors (RICS). 
+Ska provides a list of targets against which a building is evaluated. Not all parts of the list are applicable so 
+\emph{Scoping measures} are used, \ie choosing which aspects of ska are applicable to the project. Bronze, silver, 
+or gold is awarded for achieving 25\%, 50\%, and 75\% respectively.
+
+
+\section*{b: the new-build development}
+
+Sustainable regulations and standards in the UK for the new buildings:
+\begin{itemize}
+	\item Building Research Establishment's Environmental Assessment Method (BREEAM) \cite{BRE2012}
+	\item Building regulations part L1A \cite{Communities&LocalGovernment2010}, and  
+		L2A \cite{Communities&LocalGovernment2010b} and, 
+	\item Code for Sustainable Homes (CSH) \cite{Communities&LocalGovernment2010d}
+	\item Leadership in Energy and Environmental Design (LEED)
+\end{itemize}
+
+\emph{BREEAM} was developed by Building Research Establishment (BRE) as a means of assessing the environmental 
+footprint of a building. The result of a BREEAM assessment is a building rating based on the percentage success. 
+The ratings are given in table \ref{tab:BREEAMMarks}. To achieve these marks are awarded for different sectors 
+given in table \ref{tab:BREEAMSectors}.
+
+\emph{Building regulations part L1A and L2A} detail sustainability measures to be carried out on new-build 
+properties. L1A details sustainability measures for residential buildings, whereas L2A details sustainability 
+measures for non-residential buildings.
+
+\emph{Code for sustainable homes} is a UK government standard which determines the environmental 
+credentials of a new building based on a weighted set of criteria listed in table \ref{tab:cshWeighting}. The 
+Building is scored against a number of categories, listed in table \ref{tab:cshCategories}. Additionally there 
+are 3 non-weighted criteria that need to be met, otherwise the rating is not awarded. They are: Environmental 
+impact of materials, management of surface water run-off from developments, and storage of non-recyclable waste 
+and recyclable household waste.
+If the building meets these criteria, it is awarded a grade from level 1 to 6. Current UK building regulations 
+advise that all new buildings meet code for sustainable homes Level 3 at a minimum. 
+
+Additional requirements of the different levels for CSH are given in table \ref{tab:CSHCO2Water}. This shows that 
+it is possible to achieve only CSH level 3 without the use of any renewable technology. To achieve CSH level of 
+4 or greater, one or more renewable technologies is required. This is because the TER is calculated on the ideal 
+building using non-renewable technology, however to achieve a DER of 25\% or greater above the TER, on or more 
+renewable technologies is required.
+
+\emph{LEED} is an American standard that has been adopted in England to a limited extent. Similar to BREEAM, 
+LEED Uses categories in which the performance of a building is scored however, unlike BREEAM, the score against 
+certain categories is mandatory to achieve accreditation. The score is summed to give an overall score. A list of 
+requirements for the scores is given in table \ref{tab:LEEDScoreRequirements} and the categories are given in 
+table \ref{tab:LEEDCategories}.
+
+\pagebreak
+\section*{Part 2: Select \textbf{two} out of the environmental, sustainability and building 
+	energy standards/ laws/ regulations/ codes of practice from the list of those you described 
+	in your answer to question 1).}
+
+%stdSection suppresses the linebreak before it... saves having just a section title on a page
+\stdsection*{i: Describe the procedures, practices, building assessments, measurements,
+	monitoring, recording, reporting and mitigation actions you will instruct to be taken
+	in order to ensure that these buildings comply.}
+
+
+\subsection*{a: the existing city centre building, assuming a large building of over 1,000m$^2$}
+\subsubsection*{Ska}
+%Procedures and practices
+
+%Building assessment
+To assess the performance of the measures that have been put in place an online tool is available \cite{ska2013}, 
+however, to attain a ska rating a formal assessment is required by a ska assessor. 
+
+The assessor will evaluate the project at 3 stages: \emph{design/ planning}, \emph{delivery/ construction}, and 
+\emph{Occupancy stage}. In the design/ planning stage, the scope of the project is defined, \ie what is to be 
+included in the project, an indicative rating is given based on proposed work. In the delivery/ construction 
+stage evidence will need to be provided to prove to the ska assessor that the proposed work will be completed.
+The occupancy stage is optional, the assessor inspects the building a year after completion of the work to 
+compare the performance of the building against the expected performance.
+%Measurements and monitoring
+
+%Recording and reporting
+
+%Mitigation actions
+
+\subsubsection*{Building regulations part L}
+%Procedures and practices
+Part of the requirement of building regulations part L if the retrofit work is on a commercial building with 
+useful floor area greater than 1000m$^2$, then 10\% of the funding for the project must be on 
+\emph{consequential improvements}. Consequential improvements are systems put in place to improve the energy 
+efficiency of the building. Examples of consequential improvements are replacing windows for double glazing, or 
+upgrading the lighting systems \etc I will therefore instruct that, as part of the building work, 
+
+%Building assessment
+The building assessment is done as part of the planning application. The applicant assesses the performance of the 
+building design during the planning phase of the project. Supporting documentation and evidence is uploaded to the 
+government website, and are used to determine the suitability of the building. The building is assessed on BER, 
+the limiting effects of solar gain, and energy efficiency. The assessment only applies to the domestic development 
+and so will not be applied to the commercial development.
+
+%Measurements and monitoring
+
+
+%Recording and reporting
+All improvements to the building need to be recorded in the building's log book. In the log book a record is 
+required of all work done to the building, as well as the work carried out as part of the consequential 
+improvements. The application for compliance is done as part of the application for planning permission and is 
+undertaken on the government website.
+
+%Mitigation actions
+
+
+
+\subsection*{b: the new build development}
+\subsubsection*{Code for Sustainable Homes (CSH)}
+%Procedures and practices
+The main procedures that I will instruct to be taken are to assess the suitability of renewable energy and 
+incorporate them into the design of the building. For example implementing solar PV will reduce the Dwelling 
+emissions rate. It can also possibly reduce the NOx emissions when combined with a ground source heat pump to 
+provide zero carbon heating.
+
+%Building assessment
+The assessment is done by a third party. I would instruct that the building project be registered with a qualified 
+assessor who would assess the building at the planning stage, and the post construction stage. This will ensure, 
+firstly that the design of the building will qualify for the rating, and secondly that the design is correctly 
+implemented.
+
+%Measurements and monitoring
+
+
+%Recording and reporting
+The recording and reporting are largely done by the organisation carrying out the assessment. The assessor is 
+responsible for registering the building project with the code service provider, and providing the assessment. 
+
+%Mitigation actions
+
+
+\subsubsection*{Building regulations part L}
+%Procedures and practices
+
+
+%Building assessment
+
+
+%Measurements and monitoring
+I would instruct that the energy consumption of the new building is monitored during occupancy. This is to 
+ensure that energy saving measures introduced during the building phase, for example if solar PV were placed 
+on the roof as an alternate source of building power, are effective and being fully utilised.
+
+%Recording and reporting
+Records and reporting of all measures taken towards compliance to part L of the building regulations are to be 
+recorded in the buildings log book. It is advised that the logbook is regularly inspected to ensure that the 
+information contained within it is up to date and accurate, and that procedures and practices contained within 
+it are fully complied with.
+
+%Mitigation actions
+Prior to the start of the project it will be advised that soil from the site is tested for potential contagions. 
+An environmental survey will also be carried out on the local ecosystem to ensure that the new building will 
+not disrupt any of the local wildlife. Pending the results of the environmental survey mitigation action will 
+potentially be advised to reduce the effect of the new building and further protect the local wildlife.
+
+
+\section*{ii: Explain your justifications for the instructions that you gave in question part i.,
+	paying particular attention to the adverse consequences that you seek to avoid to
+	minimise your liabilities}
+
+
+\subsection*{a: the existing city centre building, assuming a large building of over 1,000m$^2$}
+\subsubsection*{Ska}
+
+
+\subsubsection*{Building regulations part L}
+
+
+\subsection*{b: the new build development}
+\subsubsection*{CSH}
+
+
+\subsubsection*{Building regulations part L}
+
+\bibliographystyle{dcu}
+\bibliography{../../../../../SDCO,Additional}
+
+\appendix
+
+\section{Appendix}
+
+\subsection{Details about CSH}
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{| l | r | r | r |}
+		\hline
+			\multicolumn{1}{|l|}{\textbf{Categories of}} & \multicolumn{1}{l|}{\textbf{Total Credits in}} & 
+				\multicolumn{1}{l|}{\textbf{Weighting Factor}} & \multicolumn{1}{l|}{\textbf{Approximate Weighted}}\\
+			\multicolumn{1}{|l|}{\textbf{Environmental Impact}} & \multicolumn{1}{l|}{\textbf{each Category}} & 
+				\multicolumn{1}{l|}{\textbf{(\% points contribution)}} & \multicolumn{1}{l|}{\textbf{Value of each Credit}}\\
+			\hline
+			Energy and CO2 Emissions & 31 & 36.4\% & 1.17\\
+			\hline
+			Water & 6 & 9.0\% & 1.50\\
+			\hline
+			Materials & 24 & 7.2\% & 0.30\\
+			\hline
+			Surface Water Run-off & 4 & 2.2\% & 0.55\\
+			\hline
+			Waste & 8 & 6.4\% & 0.80\\
+			\hline
+			Pollution & 4 & 2.8\% & 0.70\\
+			\hline
+			Health and Well-being & 12 & 14.0\% & 1.17\\
+			\hline
+			Management & 9 & 10.0\% & 1.11\\
+			\hline
+			Ecology & 9 & 12.0\% & 1.33\\
+			\hline
+		\end{tabular}
+	\caption{Categories and weightings for code for sustainable homes. \cite{Communities&LocalGovernment2010d}}
+	\label{tab:cshWeighting}
+	\end{center}
+\end{table}
+
+\begin{longtable}[H]{| l | r | r |}
+	\hline
+	\textbf{Code Categories} & \textbf{Available} & \textbf{Category}\\
+	& \textbf{Credits} & \textbf{Weighting Factor}\\
+	
+	\hline
+	\endhead % before this appears at the start of each table part (\ie when a new page is started)
+	
+	\hline
+	\endfoot % before this appears at the end of each table part (\ie when a page is finished)
+	
+	\endlastfoot % before this appears at the end of the table
+	\textbf{Energy and CO2 Emissions} & \textbf{31} & \textbf{36.40}\\*
+	Dwelling emission rate & 10 &\\*
+	Fabric energy efficiency & 9 &\\*
+	Energy display devices & 2 &\\*
+	Drying space & 1 &\\*
+	Energy labelled white goods & 2 &\\*
+	External lighting & 2 &\\*
+	Low and zero carbon technologies & 2 &\\*
+	Cycle storage & 2 &\\*
+	Home office & 1 &\\*
+	& &\\
+	\textbf{Water} & \textbf{6} & \textbf{9.00}\\*
+	Indoor water use & 5 &\\*
+	External water use & 1 &\\*
+	& &\\
+	\textbf{Materials} & \textbf{24} & \textbf{7.20}\\*
+	Environmental impact of materials & 15 &\\*
+	Responsible sourcing of materials – basic building elements & 6 &\\*
+	Responsible sourcing of materials – finishing elements & 3 &\\*
+	& & \\*
+	\textbf{Surface Water Run-off} & \textbf{4} & \textbf{2.20}\\*
+	Management of surface water run-off from developments & 2 &\\*
+	Flood risk & 2 &\\*
+	& & \\
+	\textbf{Waste} & \textbf{8} & \textbf{6.40} \\*
+	Storage of non-recyclable waste and recyclable household waste & 4 & \\*
+	Construction site waste management & 3 & \\*
+	Composting & 1 &\\*
+	& &\\
+	\textbf{Pollution} & \textbf{4} & \textbf{2.80}\\*
+	Global warming potential (GWP) of insulants & 1 &\\*
+	NOx emissions & 3 &\\*
+	& &\\
+	\textbf{Health \& Well-being} & \textbf{12} & \textbf{14.00}\\*
+	Daylighting & 3 &\\*
+	Sound insulation & 4 &\\*
+	Private space & 1 &\\*
+	Lifetime Homes & 4 &\\*
+	& &\\
+	\textbf{Management} & \textbf{9} & \textbf{10.00}\\*
+	Home user guide & 3 &\\*
+	Considerate Constructors Scheme & 2 &\\*
+	Construction site impacts & 2 &\\*
+	Security & 2 &\\*
+	& &\\
+	\textbf{Ecology} & \textbf{9} & \textbf{12.00}\\*
+	Ecological value of site & 1 &\\*
+	Ecological enhancement & 1 &\\*
+	Protection of ecological features & 1 &\\*
+	Change in ecological value of site & 4 &\\*
+	Building footprint & 2 &\\*
+	& &\\
+	\hline
+	\caption{Scores for code for sustainable homes, broken down by category. 
+		\cite{Communities&LocalGovernment2010d}}
+	\label{tab:cshCategories}
+\end{longtable}
+		
+\begin{table}[H]
+
+\begin{table}[H]
+	\begin{center}
+	\begin{tabular}{| l | c | c |}
+	\hline
+	\textbf{Code level} & \textbf{Minimum percentage improvement } & \textbf{Maximum indoor water }\\
+	 & \textbf{in DER over TER} & \textbf{consumption (litres/day)} \\
+	 \hline
+	 Level 1 & 0\% & 120 \\
+	 Level 2 & 0\% & 120 \\
+	 Level 3 & 0\% & 105 \\
+	 Level 4 & 25\% & 105 \\
+	 Level 5 & 100\% & 80 \\
+	 Level 6 & net zero CO$_2$ emissions & 80 \\
+	 \hline
+	\end{tabular}
+	\caption{Net carbon dioxide emissions and water consumption for each of the CSH levels. Adapted 
+		from \cite{Communities&LocalGovernment2010d}}
+	\label{tab:CSHCO2Water}
+	\end{center}
+\end{table}
+	\begin{center}
+	\begin{tabular}{|c|l|}
+		\hline
+		\textbf{Total Percentage Points Score} & \textbf{Code Levels}\\
+		\textbf{(equal to or greater than)} & \\
+		\hline
+		36 Points & Level 1\\
+		\hline
+		48 Points & Level 2\\
+		\hline
+		57 Points & Level 3\\
+		\hline
+		68 Points & Level 4\\
+		\hline
+		84 Points & Level 5\\
+		\hline
+		90 Points & Level 6\\
+		\hline
+	\end{tabular}
+	\end{center}
+	\caption{score requirements for code for sustainable homes}
+	\label{tab:cshScoreRequirements}
+\end{table}
+
+
+\subsection{Details about BREEAM}
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{| l | r |}
+			\hline
+			\textbf{BREEAM rating} & \textbf{Minimum \% score}\\
+			\hline
+			Outstanding & 85\\
+			Excellent & 70\\
+			Very good & 55\\
+			Good & 45\\
+			Pass & 30\\
+			\hline
+		\end{tabular}
+	\end{center}
+	\caption{BREEAM ratings and their requirements adapted from \cite{BRE2012}}
+	\label{tab:BREEAMMarks}
+\end{table}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{| l | c | c |}
+			\hline
+			\textbf{BREEAM sector} & \textbf{number of available credits} & \textbf{percentage of total}\\
+			\hline
+			Management & 22 & 17\% \\
+			Health \& wellbeing & 10 & 8\% \\
+			Energy & 30 & 23\% \\
+			Transport & 9 & 7\% \\
+			Water & 9 & 7\% \\
+			Materials & 12 & 9\% \\
+			Waste & 7 & 5\% \\
+			Land use \& Ecology & 10 & 8\% \\
+			Pollution & 13 & 10\% \\
+			Innovation & 10 & 8\% \\
+			\hline
+			\textbf{Total} & \textbf{132} & \textbf{100\%} \\
+			\hline
+		\end{tabular}
+	\end{center}
+	\caption{Number of available credits for each BREEAM sector adapted from \cite{BRE2012}}
+	\label{tab:BREEAMSectors}
+\end{table}
+
+
+\subsection{Details about LEED}
+\begin{table}[H]
+	\begin{center}
+	\begin{tabular}{| l | c |}
+		\hline
+		\textbf{Award} & \textbf{minimum score}\\
+		\hline
+		Platinum & 80 \\
+		Gold & 60 \\
+		Silver & 50 \\
+		certified & 40 \\
+		\hline
+	\end{tabular}
+	\end{center}
+	\caption{Requirements for scoring levels in LEED, adapted from USGBC website \cite{LEED2013}}
+	\label{tab:LEEDScoreRequirements}
+\end{table}
+
+\begin{longtable}[H]{| l | c |}
+	\hline
+	\textbf{Code Categories} & \textbf{Available Credits}\\
+	
+	\hline
+	\endhead % before this appears at the start of each table part (\ie when a new page is started)
+	
+	\hline
+	\endfoot % before this appears at the end of each table part (\ie when a page is finished)
+	
+	\endlastfoot % before this appears at the end of the table
+	\textbf{Sustainable sites} & \textbf{26} \\* % the * blocks the pagebreak
+	Construction activity pollution prevention & REQUIRED \\*
+	Site selection & 1 \\*
+	Development density and community connectivity & 5 \\*
+	Brownfield redevelopment & 1 \\*
+	Alternative transportation - public transportation access & 6 \\*
+	Alternative transportation - bicycle storage and changing rooms & 1 \\*
+	Alternative transportation - low-emitting and fuel-efficient vehicles & 3 \\*
+	Alternative transportation - parking capacity & 2 \\*
+	Site development - protect or restore habitat & 1 \\*
+	Site development - maximize open space & 1 \\*
+	Stormwater design - quantity control & 1 \\*
+	Stormwater design - quality control & 1 \\*
+	Heat island effect - nonroof & 1 \\*
+	Heat island effect - roof & 1 \\*
+	Light pollution reduction & 1 \\*
+	& \\
+	\textbf{water efficiency}  & \textbf{10} \\*
+	Water use reduction & REQUIRED \\*
+	Water efficient landscaping & 4 \\*
+	Innovative wastewater technologies & 2 \\*
+	Water use reduction & 4 \\*
+	& \\
+	\textbf{Energy \& atmosphere} & \textbf{35} \\*
+	Fundamental commissioning of building energy systems & REQUIRED \\*
+	Minimum energy performance & REQUIRED \\*
+	Fundamental refrigerant Mgmt & REQUIRED \\*
+	Optimize energy performance & 19 \\*
+	On-site renewable energy & 7 \\*
+	Enhanced commissioning & 2 \\*
+	Enhanced refrigerant Mgmt & 2 \\*
+	Measurement and verification & 3 \\*
+	Green power & 2 \\*
+	& \\
+	\textbf{Material \& resources} & \textbf{14} \\*
+	Storage and collection of recyclables & REQUIRED \\*
+	Building reuse - maintain existing walls, floors and roof & 3 \\*
+	Building reuse - maintain interior nonstructural elements & 1 \\*
+	Construction waste Mgmt & 2 \\*
+	Materials reuse & 2 \\*
+	Recycled content & 2 \\*
+	Regional materials & 2 \\*
+	Rapidly renewable materials & 1 \\*
+	Certified wood & 1 \\*
+	& \\
+	\textbf{Indoor environment quality} & \textbf{15} \\*
+	Minimum IAQ performance & REQUIRED \\*
+	Environmental Tobacco Smoke (ETS) control & REQUIRED \\*
+	Outdoor air delivery monitoring & 1 \\*
+	Increased ventilation & 1 \\*
+	Construction IAQ Mgmt plan - during construction & 1 \\*
+	Construction IAQ Mgmt plan - before occupancy & 1 \\*
+	Low-emitting materials - adhesives and sealants & 1 \\*
+	Low-emitting materials - paints and coatings & 1 \\*
+	Low-emitting materials - flooring systems & 1 \\*
+	Low-emitting materials - composite wood and agrifiber products & 1 \\*
+	Indoor chemical and pollutant source control & 1 \\*
+	Controllability of systems - lighting & 1 \\*
+	Controllability of systems - thermal comfort & 1 \\*
+	Thermal comfort - design & 1 \\*
+	Thermal comfort - verification & 1 \\*
+	Daylight and views - daylight & 1 \\*
+	Daylight and views - views & 1 \\*
+	& \\
+	\textbf{introduction/ other} & \textbf{6} \\*
+	Innovation in design & 5 \\*
+	LEED Accredited Professional & 1 \\*
+	Introduction/OtherIntroduction/Other & \\*
+	& \\*
+	\textbf{Regional priority} & \textbf{4} \\*
+	Regional priority & 4 \\*
+	& \\*
+	\hline
+	\textbf{TOTAL} & \textbf{110} \\*
+	\hline
+	\caption{Points available for each LEED category, adapted from USGBC website \cite{LEED2013}}
+	\label{tab:LEEDCategories}
+\end{longtable}
+
+\end{document}
