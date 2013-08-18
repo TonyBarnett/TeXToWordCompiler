@@ -91,6 +91,20 @@ namespace TexWordCompiler
             OutputFiles.FontTable f = new OutputFiles.FontTable(dir);
         }
 
+        [Test]
+        public void MakeWebSettings()
+        {
+            DirectoryInfo dir = new DirectoryInfo("C:\\Users\\Tony\\Desktop\\Test");
+            OutputFiles.WebSettings w = new OutputFiles.WebSettings(dir);
+        }
+
+        [Test]
+        public void MakeSettings()
+        {
+            DirectoryInfo dir = new DirectoryInfo("C:\\Users\\Tony\\Desktop\\Test");
+            OutputFiles.Settings w = new OutputFiles.Settings(dir);
+        }
+
 
         [Test]
         public void Zip()

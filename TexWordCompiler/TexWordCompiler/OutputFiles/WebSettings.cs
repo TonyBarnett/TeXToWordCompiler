@@ -6,15 +6,18 @@ using System.IO;
 
 namespace TexWordCompiler.OutputFiles
 {
-    class WebSettings : StreamWriter
+    class WebSettings
     {
         public WebSettings(DirectoryInfo doc)
-            : base(doc.FullName + "\\word\\webSettings.xml")
         {
-            Write("<?xmlversion=\"1.0\"encoding=\"UTF-8\"standalone=\"yes\"?>");
-            Write("<w:webSettingsxmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\"xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\">");
-            Write("<w:optimizeForBrowser/>");
-            Write("</w:webSettings>");
+            Dictionary<string, string> namespaces = new Dictionary<string, string>();
+            namespaces.Add("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+            namespaces.Add("w", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            OutputFile f = new OutputFile(namespaces, new FileInfo(doc.FullName + "\\word\\webSettings.xml"), "webSettings", "w");
+
+            f.Add(new Xml.Document("w:optimizeForBrowser"));
+
+            f.Done();
         }
     }
 }

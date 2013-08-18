@@ -11,7 +11,6 @@ namespace TexWordCompiler.OutputFiles
     {
         public FontTable(DirectoryInfo doc)
         {
-            //WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
             Dictionary<string,string> namespaces = new Dictionary<string,string>();
             namespaces.Add("r","http://schemas.openxmlformats.org/officeDocument/2006/relationships");
             namespaces.Add("w","http://schemas.openxmlformats.org/wordprocessingml/2006/main");
@@ -37,7 +36,7 @@ namespace TexWordCompiler.OutputFiles
             font.Add(new Document("w:sig", ns));
             #endregion
 
-            f.Contents.Add(font);
+            f.Add(font);
 
             #region Times new roman
             font = new Document("w:font", "w:name", "Times New Roman");
@@ -59,7 +58,7 @@ namespace TexWordCompiler.OutputFiles
             font.Add(new Document("w:sig", ns));
             #endregion
 
-            f.Contents.Add(font);
+            f.Add(font);
 
             #region Cambria
             font = new Document("w:font", "w:name", "Cambria");
@@ -81,7 +80,7 @@ namespace TexWordCompiler.OutputFiles
             font.Add(new Document("w:sig", ns));
             #endregion
 
-            f.Contents.Add(font);
+            f.Add(font);
 
             f.Done();
         }

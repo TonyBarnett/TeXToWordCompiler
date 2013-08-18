@@ -8,8 +8,6 @@ namespace TexWordCompiler.OutputFiles
 {
     public class OutputFile : Document
     {
-        public List<Document> Contents;
-
         private StreamWriter _Output;
         private FileInfo _OutFile;
 
@@ -26,8 +24,6 @@ namespace TexWordCompiler.OutputFiles
             {
                 AddAttribute(string.Format(@"xmlns:{0}", key), namespaces[key]);
             }
-
-            Contents = new List<Document>();
         }
 
         private void CreateDirectory(DirectoryInfo dir)
@@ -50,10 +46,6 @@ namespace TexWordCompiler.OutputFiles
             using (_Output = new StreamWriter(_OutFile.FullName))
             {
                 _Output.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
-                foreach (Document d in Contents)
-                {
-                    Add(d);
-                }
                 _Output.WriteLine(GetXml());
             }
         }
