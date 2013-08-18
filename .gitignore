@@ -3,3 +3,5 @@
 *.tex
 *.suo
 *.ini
+/TexWordCompiler/TexWordCompiler/bin/Debug/*.pdb
+/TexWordCompiler/TexWordCompiler/bin/Debug/*.exe

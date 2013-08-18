@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using System.IO;
+using TexWordCompiler;
 
 namespace TexWordCompiler
 {
@@ -40,36 +41,83 @@ namespace TexWordCompiler
 
             DirectoryInfo dir = new DirectoryInfo("..\\");
 
-            FileInfo f = new FileInfo(String.Format("{0}Test.Tex",dir.FullName));
+            FileInfo f = new FileInfo(String.Format("{0}Test.Tex", dir.FullName));
 
             //f.Create();
 
             using (StreamWriter w = new StreamWriter(f.FullName))
             {
                 w.WriteLine(@"an existing residential building. \emph{Building regulations part L2B} detail the measures ");
-                w.WriteLine(@"\section*{b: the ");
                 w.WriteLine(@"%comment line");
-                w.WriteLine(@"new-build development}");
                 w.WriteLine(@"\thing{new-build development}{potato}");
                 w.WriteLine(@"\thing{trees}{with}[optional Monkeys]");
 
             }
 
-            StreamReader sr = new StreamReader(f.FullName);
-
-            List<string> output = new List<string>();
-            List<string> type = new List<string>();
-            List<string> optional = new List<string>();
-
-            while (!sr.EndOfStream)
+            using (StreamReader sr = new StreamReader(f.FullName))
             {
-                r.GetNextBlock(sr);
+                Dictionary<int, List<string>> outputs = new Dictionary<int, List<string>>();
+                Dictionary<int, List<string>> type = new Dictionary<int, List<string>>();
+                Dictionary<int, List<string>> parameters = new Dictionary<int, List<string>>();
+                Dictionary<int, List<string>> optionals = new Dictionary<int, List<string>>();
 
-                
+
+                while (!sr.EndOfStream)
+                {
+                    r.GetNextBlock(sr);
+
+                }
             }
-
             f.Delete();
         }
 
+        [Test]
+        public void SimpleDocument()
+        {
+            DirectoryInfo dir = new DirectoryInfo("C:\\Users\\Tony\\Desktop\\Test");
+            using (OutputFiles.WordDocument w = new OutputFiles.WordDocument(dir))
+            {
+                w.AddLine("test line");
+                w.End();
+            }
+            //using (OutputFiles.FontTable f = new OutputFiles.FontTable(dir)) ;
+            //using (OutputFiles.WebSettings w = new OutputFiles.WebSettings(dir)) ;
+        }
+
+        [Test]
+        public void MakeFontTable()
+        {
+            DirectoryInfo dir = new DirectoryInfo("C:\\Users\\Tony\\Desktop\\Test");
+            OutputFiles.FontTable f = new OutputFiles.FontTable(dir);
+        }
+
+
+        [Test]
+        public void Zip()
+        {
+            DirectoryInfo dir = new DirectoryInfo(@"T:\\GitHub\\TeXToWordCompiler\\Test\\ZipTest");
+            DirectoryInfo outputDir = new DirectoryInfo(@"T:\\GitHub\\TeXToWordCompiler\\Test\\OutputFile");
+            ZipFiles z = new ZipFiles(outputDir);
+
+            if (outputDir.Exists == false)
+            {
+                outputDir.Create();
+            }
+
+            List<DirectoryInfo> dirs = new List<DirectoryInfo>();
+            List<FileInfo> fs = new List<FileInfo>();
+            
+            foreach(DirectoryInfo d in dir.GetDirectories())
+            {
+                dirs.Add(d);
+            }
+
+            foreach(FileInfo f in dir.GetFiles())
+            {
+                fs.Add(f);
+            }
+
+            z.Zip(dirs, fs);
+        }
     }
 }

@@ -24,3 +24,4 @@ T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\bin\Debug\nunit.fram
 T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\bin\Debug\Xml.dll
 T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\bin\Debug\Xml.pdb
 T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\bin\Debug\nunit.framework.xml
+T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\bin\Debug\SevenZipSharp.dll

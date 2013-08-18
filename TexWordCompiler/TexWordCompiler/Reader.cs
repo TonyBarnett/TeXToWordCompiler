@@ -165,6 +165,9 @@ namespace TexWordCompiler
             public List<string> Output = new List<string>();
 
             public List<string> Type = new List<string>();
+            public List<string> Params = new List<string>();
+
+            public List<string> Optionals = new List<string>();
             /// <summary>
             /// to do much later... work out how Word stores 
             /// equations or just work it out as text, for now 
@@ -399,14 +402,15 @@ namespace TexWordCompiler
 
                 string thing = r.ReadLine();
 
-                List<string> type = new List<string>();
-                List<string> output = new List<string>();
-                List<string> parameters = new List<string>();
-                List<string> optionalParameters = new List<string>();
-
                 thing = thing.TrimStart(new char[] { '\t' });
 
-                if (thing.Count() == 0 || thing[0] == '%')
+
+                if(thing.Replace(@"\%","").Contains('%'))// remove any comments
+                {
+                    thing = thing.Replace(@"\%","").Split('%')[0];
+                }
+
+                if (thing.Count() == 0)//possible if line was a comment or just spacing
                 {
                     return;
                 }
@@ -423,7 +427,7 @@ namespace TexWordCompiler
                     thing = r.ReadLine();
                 }
 
-                if (Regex.IsMatch(thing, pattern5))// \blah{ anything \blah2{}
+                if (Regex.IsMatch(thing, pattern5))// \blah{ anything \blah2{} gst }
                 {
                     ParseLine(thing);
                 }
@@ -435,10 +439,10 @@ namespace TexWordCompiler
 
                     foreach (Match m in match)
                     {
-                        type.Add(m.Groups[1].Value);
-                        output.Add(m.Groups[2].Value);
-                        parameters.Add(m.Groups[3].Value);
-                        optionalParameters.Add(m.Groups[4].Value);
+                        Type.Add(m.Groups[1].Value);
+                        Output.Add(m.Groups[2].Value);
+                        Params.Add(m.Groups[3].Value);
+                        Optionals.Add(m.Groups[4].Value);
                     }
                 }
 
@@ -448,9 +452,9 @@ namespace TexWordCompiler
 
                     foreach (Match m in match)
                     {
-                        type.Add(m.Groups[1].Value);
-                        output.Add(m.Groups[2].Value);
-                        parameters.Add(m.Groups[3].Value);
+                        Type.Add(m.Groups[1].Value);
+                        Output.Add(m.Groups[2].Value);
+                        Params.Add(m.Groups[3].Value);
                     }
                 }
 
@@ -460,8 +464,8 @@ namespace TexWordCompiler
 
                     foreach (Match m in match)
                     {
-                        type.Add(m.Groups[1].Value);
-                        output.Add(m.Groups[2].Value);
+                        Type.Add(m.Groups[1].Value);
+                        Output.Add(m.Groups[2].Value);
                     }
                 }
             }
