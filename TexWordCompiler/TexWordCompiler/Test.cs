@@ -105,6 +105,19 @@ namespace TexWordCompiler
             OutputFiles.Settings w = new OutputFiles.Settings(dir);
         }
 
+        [Test]
+        public void MakeApp()
+        {
+            DirectoryInfo dir = new DirectoryInfo("C:\\Users\\Tony\\Desktop\\Test");
+            OutputFiles.App w = new OutputFiles.App(dir);
+        }
+
+        [Test]
+        public void MakeCore()
+        {
+            DirectoryInfo dir = new DirectoryInfo("C:\\Users\\Tony\\Desktop\\Test");
+            OutputFiles.Core w = new OutputFiles.Core(dir);
+        }
 
         [Test]
         public void Zip()
