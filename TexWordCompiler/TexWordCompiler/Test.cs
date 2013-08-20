@@ -122,29 +122,27 @@ namespace TexWordCompiler
         [Test]
         public void Zip()
         {
-            DirectoryInfo dir = new DirectoryInfo(@"T:\\GitHub\\TeXToWordCompiler\\Test\\ZipTest");
-            DirectoryInfo outputDir = new DirectoryInfo(@"T:\\GitHub\\TeXToWordCompiler\\Test\\OutputFile");
+            DirectoryInfo dir = new DirectoryInfo(@"C:\\Users\\Tony\\Desktop\\test_docx");
+            DirectoryInfo outputDir = new DirectoryInfo(@"C:\\Users\\Tony\\Desktop\\Test");
             ZipFiles z = new ZipFiles(outputDir);
 
-            if (outputDir.Exists == false)
-            {
-                outputDir.Create();
-            }
 
             List<DirectoryInfo> dirs = new List<DirectoryInfo>();
-            List<FileInfo> fs = new List<FileInfo>();
-            
-            foreach(DirectoryInfo d in dir.GetDirectories())
+            dirs.Add(new DirectoryInfo(dir + "\\_rels"));
+            dirs.Add(new DirectoryInfo(dir + "\\docProps"));
+            dirs.Add(new DirectoryInfo(dir + "\\word"));
+
+            FileInfo f = new FileInfo(dir.FullName + @"\\[Content_Types].xml");
+
+            z.AddFile(f);
+
+
+            foreach(DirectoryInfo d in dirs)
             {
-                dirs.Add(d);
+                z.AddFolder(d);
             }
 
-            foreach(FileInfo f in dir.GetFiles())
-            {
-                fs.Add(f);
-            }
-
-            z.Zip(dirs, fs);
+            z.Zip();
         }
     }
 }

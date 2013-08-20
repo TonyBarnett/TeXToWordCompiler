@@ -11,6 +11,8 @@ namespace TexWordCompiler
     {
         private DirectoryInfo _Dir;
 
+        private Dictionary<string, string> _Directories;
+
         /// <summary>
         /// 
         /// </summary>
@@ -18,48 +20,66 @@ namespace TexWordCompiler
         public ZipFiles(DirectoryInfo dir)
         {
             _Dir = dir;
+
+            if (!_Dir.Exists)
+            {
+                _Dir.Create();
+            }
+
+            _Directories = new Dictionary<string, string>();
         }
 
-
-        public void Zip(List<DirectoryInfo> dirs, List<FileInfo> files)
+        public void AddFolder(DirectoryInfo dir, DirectoryInfo root)
         {
-            SevenZipCompressor.SetLibraryPath(@"C:\\Program Files\\7-Zip\\7z.dll");
-
-            using (Stream output = new FileStream(_Dir.FullName + "\\test.docx", FileMode.OpenOrCreate))
+            //Add all files in this folder...
+            foreach (FileInfo f in dir.GetFiles())
             {
-                using (Stream input = new MemoryStream())
-                {
-                    foreach (DirectoryInfo dir in dirs)
-                    {
-                        using (Stream s = new MemoryStream())
-                        {
-                            for (int i = 0; i < s.Length; i++)
-                            {
-                                input.WriteByte((byte)s.ReadByte());
-                            }
-                        }
-                    }
+                _Directories.Add(f.FullName, f.FullName.Replace(dir.Parent.FullName, ""));
+            }
+            //... then go through all child directories and do the same
+            foreach (DirectoryInfo d in dir.GetDirectories())
+            {
+                AddFolder(d, root);
+            }
+        }
 
-                    foreach (FileInfo f in files)
-                    {
-                        using (Stream s = new FileStream(f.FullName, FileMode.Open))
-                        {
-                            for (int i = 0; i < s.Length; i++)
-                            {
-                                input.WriteByte((byte)s.ReadByte());
-                            }
-                        }
-                    }
+        public void AddFolder(DirectoryInfo dir)
+        {
+            //Add all files in this folder...
+            foreach (FileInfo f in dir.GetFiles())
+            {
+                _Directories.Add(f.FullName, f.FullName.Replace(dir.Parent.FullName, ""));
+            }
+            //... then go through all child directories and do the same
+            foreach (DirectoryInfo d in dir.GetDirectories())
+            {
+                AddFolder(d, dir);
+            }
+        }
 
-                    SevenZipCompressor c = new SevenZipCompressor();
-                    c.CompressionMethod = CompressionMethod.Copy;
-                    c.ArchiveFormat = OutArchiveFormat.Zip;
+        /// <summary>
+        /// Only to be used for files in the root directory, otherwise 
+        /// the directory structure will be lost
+        /// </summary>
+        /// <param name="file"></param>
+        public void AddFile(FileInfo file)
+        {
+            _Directories.Add(file.FullName, file.Name);
+        }
 
-                    
+        public void Zip()
+        {
+            if (_Directories != null)
+            {
+                SevenZipCompressor.SetLibraryPath(@"C:\\Program Files\\7-Zip\\7z.dll");
+                SevenZipCompressor c = new SevenZipCompressor();
+                c.DirectoryStructure = true;
 
-                    c.CompressStream(input, output);
+                c.CompressionMode = CompressionMode.Create;
+                c.ArchiveFormat = OutArchiveFormat.Zip;
+                c.PreserveDirectoryRoot = true;
 
-                }
+                c.CompressFileDictionary(_Directories, _Dir.FullName + "\\output.docx");
             }
         }
     }
