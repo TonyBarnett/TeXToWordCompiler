@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
 using System.IO;
-using TexWordCompiler;
-using SevenZip;
+using NUnit.Framework;
 
 namespace TexWordCompiler
 {
     [TestFixture]
     public class Test
     {
+        private string TempOutput = "C:\\Users\\Tony\\Desktop\\Test";
 
         [Test]
         public void Parser()
@@ -75,7 +72,7 @@ namespace TexWordCompiler
         [Test]
         public void SimpleDocument()
         {
-            DirectoryInfo dir = new DirectoryInfo("C:\\Users\\Tony\\Desktop\\Test");
+            DirectoryInfo dir = new DirectoryInfo(TempOutput);
             using (OutputFiles.WordDocument w = new OutputFiles.WordDocument(dir))
             {
                 w.AddLine("test line");
@@ -88,28 +85,28 @@ namespace TexWordCompiler
         [Test]
         public void MakeFontTable()
         {
-            DirectoryInfo dir = new DirectoryInfo("C:\\Users\\Tony\\Desktop\\Test");
+            DirectoryInfo dir = new DirectoryInfo(TempOutput);
             OutputFiles.FontTable f = new OutputFiles.FontTable(dir);
         }
 
         [Test]
         public void MakeWebSettings()
         {
-            DirectoryInfo dir = new DirectoryInfo("C:\\Users\\Tony\\Desktop\\Test");
+            DirectoryInfo dir = new DirectoryInfo(TempOutput);
             OutputFiles.WebSettings w = new OutputFiles.WebSettings(dir);
         }
 
         [Test]
         public void MakeSettings()
         {
-            DirectoryInfo dir = new DirectoryInfo("C:\\Users\\Tony\\Desktop\\Test");
+            DirectoryInfo dir = new DirectoryInfo(TempOutput);
             OutputFiles.Settings w = new OutputFiles.Settings(dir);
         }
 
         [Test]
         public void MakeApp()
         {
-            DirectoryInfo dir = new DirectoryInfo("C:\\Users\\Tony\\Desktop\\Test");
+            DirectoryInfo dir = new DirectoryInfo(TempOutput);
             OutputFiles.App w = new OutputFiles.App(dir);
         }
 
@@ -121,10 +118,28 @@ namespace TexWordCompiler
         }
 
         [Test]
+        public void MakeRels()
+        {
+            DirectoryInfo dir = new DirectoryInfo("C:\\Users\\Tony\\Desktop\\Test");
+            OutputFiles.Rels w = new OutputFiles.Rels(dir);
+        }
+
+        [Test]
+        public void MakeTestOutput()
+        {
+            MakeFontTable();
+            MakeApp();
+            MakeCore();
+            MakeSettings();
+            MakeWebSettings();
+            MakeRels();
+        }
+
+        [Test]
         public void Zip()
         {
             DirectoryInfo dir = new DirectoryInfo(@"C:\\Users\\Tony\\Desktop\\test_docx");
-            DirectoryInfo outputDir = new DirectoryInfo(@"C:\\Users\\Tony\\Desktop\\Test");
+            DirectoryInfo outputDir = new DirectoryInfo(TempOutput);
             ZipFiles z = new ZipFiles(outputDir);
 
 

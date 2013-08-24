@@ -82,6 +82,7 @@
     <Compile Include="OutputFiles\document.cs" />
     <Compile Include="OutputFiles\FontTable.cs" />
     <Compile Include="OutputFiles\OutputFile.cs" />
+    <Compile Include="OutputFiles\Rels.cs" />
     <Compile Include="OutputFiles\Settings.cs" />
     <Compile Include="OutputFiles\Styles.cs" />
     <Compile Include="OutputFiles\WebSettings.cs" />
