@@ -38,12 +38,6 @@ namespace TexWordCompiler
                 string outFile = f.FullName.Replace(dir.Parent.FullName + "\\", "");
 
                 _Directories.Add(outFile, f.FullName);
-
-                if (!outFileFull.Directory.Exists)
-                {
-                    outFileFull.Directory.Create();
-                }
-                f.CopyTo(outFileFull.FullName, true);
             }
             //... then go through all child directories and do the same
             foreach (DirectoryInfo d in dir.GetDirectories())
@@ -61,13 +55,6 @@ namespace TexWordCompiler
                 string outFile = f.FullName.Replace(dir.Parent.FullName + "\\", "");
 
                 _Directories.Add(outFile, f.FullName);
-
-                if (!outFileFull.Directory.Exists)
-                {
-                    outFileFull.Directory.Create();
-                }
-                f.CopyTo(outFileFull.FullName, true);
-
             }
 
             //... then go through all child directories and do the same
@@ -85,7 +72,6 @@ namespace TexWordCompiler
         public void AddFile(FileInfo file)
         {
             _Directories.Add( file.Name, file.FullName);
-            file.CopyTo(_Dir.FullName + "\\" + file.Name,true);
         }
 
         public void Zip()
