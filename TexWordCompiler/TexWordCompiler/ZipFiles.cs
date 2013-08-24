@@ -34,7 +34,16 @@ namespace TexWordCompiler
             //Add all files in this folder...
             foreach (FileInfo f in dir.GetFiles())
             {
-                _Directories.Add(f.FullName, f.FullName.Replace(dir.Parent.FullName, ""));
+                FileInfo outFileFull =  new FileInfo(f.FullName.Replace(dir.Parent.FullName, _Dir.FullName));
+                string outFile = f.FullName.Replace(dir.Parent.FullName + "\\", "");
+
+                _Directories.Add(outFile, f.FullName);
+
+                if (!outFileFull.Directory.Exists)
+                {
+                    outFileFull.Directory.Create();
+                }
+                f.CopyTo(outFileFull.FullName, true);
             }
             //... then go through all child directories and do the same
             foreach (DirectoryInfo d in dir.GetDirectories())
@@ -48,8 +57,19 @@ namespace TexWordCompiler
             //Add all files in this folder...
             foreach (FileInfo f in dir.GetFiles())
             {
-                _Directories.Add(f.FullName, f.FullName.Replace(dir.Parent.FullName, ""));
+                FileInfo outFileFull = new FileInfo(f.FullName.Replace(dir.Parent.FullName, _Dir.FullName));
+                string outFile = f.FullName.Replace(dir.Parent.FullName + "\\", "");
+
+                _Directories.Add(outFile, f.FullName);
+
+                if (!outFileFull.Directory.Exists)
+                {
+                    outFileFull.Directory.Create();
+                }
+                f.CopyTo(outFileFull.FullName, true);
+
             }
+
             //... then go through all child directories and do the same
             foreach (DirectoryInfo d in dir.GetDirectories())
             {
@@ -64,7 +84,8 @@ namespace TexWordCompiler
         /// <param name="file"></param>
         public void AddFile(FileInfo file)
         {
-            _Directories.Add(file.FullName, file.Name);
+            _Directories.Add( file.Name, file.FullName);
+            file.CopyTo(_Dir.FullName + "\\" + file.Name,true);
         }
 
         public void Zip()
@@ -74,10 +95,11 @@ namespace TexWordCompiler
                 SevenZipCompressor.SetLibraryPath(@"C:\\Program Files\\7-Zip\\7z.dll");
                 SevenZipCompressor c = new SevenZipCompressor();
                 c.DirectoryStructure = true;
-
+                c.PreserveDirectoryRoot = false;
                 c.CompressionMode = CompressionMode.Create;
                 c.ArchiveFormat = OutArchiveFormat.Zip;
                 c.PreserveDirectoryRoot = true;
+
 
                 c.CompressFileDictionary(_Directories, _Dir.FullName + "\\output.docx");
             }
