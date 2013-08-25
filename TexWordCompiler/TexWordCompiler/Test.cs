@@ -113,14 +113,21 @@ namespace TexWordCompiler
         [Test]
         public void MakeCore()
         {
-            DirectoryInfo dir = new DirectoryInfo("C:\\Users\\Tony\\Desktop\\Test");
+            DirectoryInfo dir = new DirectoryInfo(TempOutput);
             OutputFiles.Core w = new OutputFiles.Core(dir);
+        }
+
+        [Test]
+        public void MakeStyle()
+        {
+            DirectoryInfo dir = new DirectoryInfo(TempOutput);
+            OutputFiles.Styles w = new OutputFiles.Styles(dir);
         }
 
         [Test]
         public void MakeRels()
         {
-            DirectoryInfo dir = new DirectoryInfo("C:\\Users\\Tony\\Desktop\\Test");
+            DirectoryInfo dir = new DirectoryInfo(TempOutput);
             OutputFiles.Rels w = new OutputFiles.Rels(dir);
         }
 
@@ -132,6 +139,7 @@ namespace TexWordCompiler
             MakeCore();
             MakeSettings();
             MakeWebSettings();
+            MakeStyle();
             MakeRels();
         }
 
