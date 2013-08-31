@@ -78,8 +78,10 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="OutputFiles\app.cs" />
+    <Compile Include="OutputFiles\ContentType.cs" />
     <Compile Include="OutputFiles\Core.cs" />
     <Compile Include="OutputFiles\document.cs" />
+    <Compile Include="OutputFiles\documentXmlRels.cs" />
     <Compile Include="OutputFiles\FontTable.cs" />
     <Compile Include="OutputFiles\OutputFile.cs" />
     <Compile Include="OutputFiles\Rels.cs" />

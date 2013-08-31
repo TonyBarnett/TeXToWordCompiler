@@ -8,7 +8,7 @@ namespace TexWordCompiler
     [TestFixture]
     public class Test
     {
-        private string TempOutput = "C:\\Users\\Tony\\Desktop\\Test";
+        private string TempOutput = "C:\\Users\\Tony\\Desktop\\TexWordCompilerTestFiles\\Test";
 
         [Test]
         public void Parser()
@@ -70,14 +70,14 @@ namespace TexWordCompiler
         }
 
         [Test]
-        public void SimpleDocument()
+        public void MakeSimpleDocument()
         {
             DirectoryInfo dir = new DirectoryInfo(TempOutput);
-            using (OutputFiles.WordDocument w = new OutputFiles.WordDocument(dir))
-            {
-                w.AddLine("test line");
-                w.End();
-            }
+            OutputFiles.WordDocument w = new OutputFiles.WordDocument(dir);
+
+            w.AddLine("test Line");
+
+            w.End();
             //using (OutputFiles.FontTable f = new OutputFiles.FontTable(dir)) ;
             //using (OutputFiles.WebSettings w = new OutputFiles.WebSettings(dir)) ;
         }
@@ -132,6 +132,37 @@ namespace TexWordCompiler
         }
 
         [Test]
+        public void MakeContentType()
+        {
+            DirectoryInfo dir = new DirectoryInfo(TempOutput);
+
+            Dictionary<string, string> defaults = new Dictionary<string, string>();
+            defaults.Add("rels", "application/vnd.openxmlformats-package.relationships+xml");
+            defaults.Add("xml", "application/xml");
+
+            Dictionary<string, string> partNames = new Dictionary<string, string>();
+
+            partNames.Add("/word/document.xml", "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml");
+            partNames.Add("/word/styles.xml", "application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml");
+            partNames.Add("/docProps/app.xml", "application/vnd.openxmlformats-officedocument.extended-properties+xml");
+            partNames.Add("/word/settings.xml", "application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml");
+            partNames.Add("/word/theme/theme1.xml", "application/vnd.openxmlformats-officedocument.theme+xml");
+            partNames.Add("/word/fontTable.xml", "application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml");
+            partNames.Add("/word/webSettings.xml", "application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml");
+            partNames.Add("/docProps/core.xml", "application/vnd.openxmlformats-package.core-properties+xml");
+
+            OutputFiles.ContentType f = new OutputFiles.ContentType(dir, defaults, partNames);
+        }
+
+        [Test]
+        public void MakeDocumentRels()
+        {
+            DirectoryInfo dir = new DirectoryInfo(TempOutput);
+
+            OutputFiles.documentXmlRels f = new OutputFiles.documentXmlRels(dir);
+        }
+
+        [Test]
         public void MakeTestOutput()
         {
             MakeFontTable();
@@ -141,12 +172,17 @@ namespace TexWordCompiler
             MakeWebSettings();
             MakeStyle();
             MakeRels();
+            MakeContentType();
+            MakeDocumentRels();
+
+            Zip();
         }
 
         [Test]
         public void Zip()
         {
-            DirectoryInfo dir = new DirectoryInfo(@"C:\\Users\\Tony\\Desktop\\test_docx");
+            //DirectoryInfo dir = new DirectoryInfo(@"C:\\Users\\Tony\\Desktop\\test_docx");
+            DirectoryInfo dir = new DirectoryInfo(TempOutput);
             DirectoryInfo outputDir = new DirectoryInfo(TempOutput);
             ZipFiles z = new ZipFiles(outputDir);
 

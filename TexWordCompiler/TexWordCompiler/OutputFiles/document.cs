@@ -7,31 +7,38 @@ using System.IO;
 
 namespace TexWordCompiler.OutputFiles
 {
-    class WordDocument : StreamWriter
+    class WordDocument
     {
+        private OutputFile _F;
+        private Document _Body;
+
         private Document _Paragraph;
         /// <summary>
         /// starts a Document in "doc" and puts all namespace rubbish 
         /// at the beginning
-        /// <param name="doc">directory where this wants to go within structure</param>
+        /// <param name="doc"></param>
         /// </summary>
         public WordDocument(DirectoryInfo doc)
-            : base(doc.FullName + "\\word\\document.xml")
         {
-            WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
-            Write("<w:document ");
-            Write("xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ");
-            Write("xmlns:o=\"urn:schemas-microsoft-com:office:office\" ");
-            Write("xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ");
-            Write("xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" ");
-            Write("xmlns:v=\"urn:schemas-microsoft-com:vml\" ");
-            Write("xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing\" ");
-            Write("xmlns:w10=\"urn:schemas-microsoft-com:office:word\" ");
-            Write("xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" ");
-            Write("xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\"");
-            Write(">");
+            Dictionary<string, string> namespaces = new Dictionary<string, string>();
+
+
+            namespaces.Add("ve", "http://schemas.openxmlformats.org/markup-compatibility/2006");
+            namespaces.Add("o", "urn:schemas-microsoft-com:office:office");
+            namespaces.Add("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+            namespaces.Add("m", "http://schemas.openxmlformats.org/officeDocument/2006/math");
+            namespaces.Add("v", "urn:schemas-microsoft-com:vml");
+            namespaces.Add("wp", "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing");
+            namespaces.Add("w10", "urn:schemas-microsoft-com:office:word");
+            namespaces.Add("w", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            namespaces.Add("wne", "http://schemas.microsoft.com/office/word/2006/wordml");
+            
+            
             //Write("<w:background w:color=\"FFFFFF\"/><w:body>");
-            Write("<w:body>");
+            //Write("<w:body>");
+            _F = new OutputFile(namespaces, new FileInfo(doc.FullName + "\\word\\document.xml"), "document", "w");
+
+            _Body = new Document("w:body");
 
             _Paragraph = new Document("w:p");
             _Paragraph.AddAttribute("w:rsidR", "00000000");
@@ -41,7 +48,8 @@ namespace TexWordCompiler.OutputFiles
 
         public void NextParagrah()
         {
-            Write(_Paragraph.GetXml());
+            
+            _Body.Add(_Paragraph);
             _Paragraph = new Document("w:p");
             _Paragraph.AddAttribute("w:rsidR", "00000000");
             _Paragraph.AddAttribute("w:rsidRDefault", "00000000");
@@ -60,10 +68,28 @@ namespace TexWordCompiler.OutputFiles
         /// </summary>
         public void End()
         {
-            Write(_Paragraph.GetXml());
-            Write("<w:sectPr><w:pgSz w:w=\"12240\" w:h=\"15840\"/><w:pgMar w:left=\"1440\" w:right=\"1440\" w:top=\"1440\" w:bottom=\"1440\"/></w:sectPr></w:body>");
+            _Body.Add(_Paragraph);
 
-            WriteLine("</w:document>");
+            Document endGoop = new Document("w:sectPr");
+            Dictionary <string, string> attributes = new Dictionary<string,string>();
+
+            attributes.Add("w:w", "12240");
+            attributes.Add( "w:h", "15840");
+            endGoop.Add(new Document("w:pgSz", attributes));
+
+            attributes = new Dictionary<string,string>();
+            attributes.Add("w:left", "1440");
+            attributes.Add( "w:right","1440");
+            attributes.Add( "w:top", "1440");
+            attributes.Add("w:bottom","1440");
+
+            endGoop.Add(new Document("w:pgMar", attributes));
+
+            _Body.Add(endGoop);
+
+            _F.Add(_Body);
+
+            _F.Done();
         }
     }
 }
