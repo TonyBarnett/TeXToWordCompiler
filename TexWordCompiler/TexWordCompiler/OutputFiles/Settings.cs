@@ -19,7 +19,7 @@ namespace TexWordCompiler.OutputFiles
             namespaces.Add("w", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
             namespaces.Add("sl", "http://schemas.openxmlformats.org/schemaLibrary/2006/main");
 
-            OutputFile f = new OutputFile(namespaces, new FileInfo(doc.FullName + "\\word\\settings.xml"), "fonts", "w");
+            OutputFile f = new OutputFile(namespaces, new FileInfo(doc.FullName + "\\word\\settings.xml"), "settings", "w");
 
             f.Add(new Xml.Document("w:zoom", "w:percent", "100"));
             f.Add(new Xml.Document("w:defaultTabStop", "w:val", "720"));

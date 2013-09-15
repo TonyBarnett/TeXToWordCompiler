@@ -19,10 +19,10 @@ namespace TexWordCompiler.OutputFiles
 
             OutputFile f = new OutputFile(namespaces, new FileInfo(doc.FullName + "\\docProps\\core.xml"), "coreProperties", "cp");
 
-            f.Add(new Xml.Document("dc:creator", "tony.barnett"));
-            f.Add(new Xml.Document("cp:lastModifiedBy", "tony.barnett"));
-            f.Add(new Xml.Document("cp:revision", "1"));
+            f.Add(new Xml.Document("dc:creator", "T"));
             f.Add(new Xml.Document("dcterms:created", "xsi:type", "dcterms:W3CDTF", DateTime.Now.ToString("yyyy-MM-ddThh:mm:ssZ")));
+            f.Add(new Xml.Document("cp:revision", "1"));
+            f.Add(new Xml.Document("cp:lastModifiedBy", "T"));
             f.Add(new Xml.Document("dcterms:modified", "xsi:type", "dcterms:W3CDTF", DateTime.Now.ToString("yyyy-MM-ddThh:mm:ssZ")));
 
             f.Done();

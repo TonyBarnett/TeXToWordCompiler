@@ -87,6 +87,7 @@
     <Compile Include="OutputFiles\Rels.cs" />
     <Compile Include="OutputFiles\Settings.cs" />
     <Compile Include="OutputFiles\Styles.cs" />
+    <Compile Include="OutputFiles\Theme.cs" />
     <Compile Include="OutputFiles\WebSettings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

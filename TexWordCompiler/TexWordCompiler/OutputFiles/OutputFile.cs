@@ -26,6 +26,16 @@ namespace TexWordCompiler.OutputFiles
             }
         }
 
+        public OutputFile(Dictionary<string, string> namespaces, FileInfo file, string documentName)
+            : base(documentName)
+        {
+            _OutFile = file;
+            foreach (string key in namespaces.Keys)
+            {
+                AddAttribute(string.Format(@"xmlns:{0}", key), namespaces[key]);
+            }
+        }
+
         private void CreateDirectory(DirectoryInfo dir)
         {
             if (dir.Exists)
