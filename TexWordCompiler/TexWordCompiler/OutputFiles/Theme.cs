@@ -19,6 +19,7 @@ namespace TexWordCompiler.OutputFiles
             f.AddAttribute("name", "Office Theme");
 
             Document themeElements = new Document("themeElements", "name", "theme1");
+            f.Add(themeElements);
             Document clrScheme = new Document("clrScheme");
             themeElements.Add(clrScheme);
 
@@ -76,8 +77,39 @@ namespace TexWordCompiler.OutputFiles
             minorFont.Add(new Document("cs", "typeface", ""));
 
             Document fmtScheme = new Document("fmtScheme", "name", "Office");
-            fmtScheme.Add(new Document("solidFill"));
-            
+            themeElements.Add(fmtScheme);
+            Document fillStyleList = new Document("a:fillStyleLst");
+            fmtScheme.Add(fillStyleList);
+
+            Document solidFill = new Document("a:solidFill");
+            fillStyleList.Add(solidFill);
+            solidFill.Add(new Document("a:schemeClr", "val", "phClr"));
+
+            Document gradFill = new Document("a:gradFill", "rotWithShape", "true");
+            fillStyleList.Add(gradFill);
+
+            Document blipFill = new Document("a:blipFill", "rotWithShape", "true");
+            fillStyleList.Add(blipFill);
+
+            Document lineStyle = new Document("a:lnStyleLst");
+            fmtScheme.Add(lineStyle);
+
+            lineStyle.Add(new Document("a:ln"));
+            lineStyle.Add(new Document("a:ln"));
+            lineStyle.Add(new Document("a:ln"));
+
+            Document effectStyleList = new Document("a:effectStyleLst");
+            fmtScheme.Add(effectStyleList);
+
+            effectStyleList.Add(new Document("a:effectList"));
+            effectStyleList.Add(new Document("a:effectDrag"));
+
+            Document bgFillStyleLst = new Document("a:bgFillStyleLst");
+            bgFillStyleLst.Add(solidFill);
+            bgFillStyleLst.Add(gradFill);
+            bgFillStyleLst.Add(blipFill);
+
+            f.Done();
         }
     }
 }

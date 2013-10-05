@@ -163,9 +163,17 @@ namespace TexWordCompiler
         }
 
         [Test]
+        public void MakeTheme()
+        {
+            DirectoryInfo dir = new DirectoryInfo(TempOutput);
+            OutputFiles.Theme w = new OutputFiles.Theme(dir);
+        }
+
+        [Test]
         public void MakeTestOutput()
         {
             MakeFontTable();
+            MakeTheme();
             MakeApp();
             MakeCore();
             MakeSettings();
