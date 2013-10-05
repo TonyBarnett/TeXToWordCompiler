@@ -56,6 +56,9 @@
     <OutputPath>bin\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Office.Interop.Word, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
     <Reference Include="SevenZipSharp">
       <HintPath>C:\Program Files\7-Zip\SevenZipSharp.dll</HintPath>
@@ -77,18 +80,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="OutputFiles\app.cs" />
-    <Compile Include="OutputFiles\ContentType.cs" />
-    <Compile Include="OutputFiles\Core.cs" />
-    <Compile Include="OutputFiles\document.cs" />
-    <Compile Include="OutputFiles\documentXmlRels.cs" />
-    <Compile Include="OutputFiles\FontTable.cs" />
-    <Compile Include="OutputFiles\OutputFile.cs" />
-    <Compile Include="OutputFiles\Rels.cs" />
-    <Compile Include="OutputFiles\Settings.cs" />
-    <Compile Include="OutputFiles\Styles.cs" />
-    <Compile Include="OutputFiles\Theme.cs" />
-    <Compile Include="OutputFiles\WebSettings.cs" />
+    <Compile Include="OutputFiles\Output.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader.cs" />

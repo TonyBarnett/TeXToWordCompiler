@@ -12,3 +12,8 @@ T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\obj\Debug\ResGen.rea
 T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\obj\Debug\ResGen.write.1.tlog
 T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\obj\Debug\TexWordCompiler.exe
 T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\obj\Debug\TexWordCompiler.pdb
+T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\bin\Debug\Microsoft.Office.Interop.Word.dll
+T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\bin\Debug\office.dll
+T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\bin\Debug\Microsoft.Vbe.Interop.dll
+T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\bin\Debug\Microsoft.Office.Interop.Word.xml
+T:\GitHub\TeXToWordCompiler\TexWordCompiler\TexWordCompiler\bin\Debug\office.xml
