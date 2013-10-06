@@ -187,6 +187,18 @@ namespace TexWordCompiler
         //}
 
         [Test]
+        public void MakeSimpleDocument()
+        {
+            OutputFiles.Output o = new OutputFiles.Output();
+            o.AddLine("new line");
+
+            using (StreamWriter r = new StreamWriter(TempOutput + "\\testOutput.txt"))
+            {
+                r.WriteLine(o.GetXml());
+            }
+        }
+
+        [Test]
         public void InteropTest()
         {
             OutputFiles.Output sh = new OutputFiles.Output();
