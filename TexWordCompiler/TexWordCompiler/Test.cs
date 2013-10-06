@@ -8,7 +8,8 @@ namespace TexWordCompiler
     [TestFixture]
     public class Test
     {
-        private string TempOutput = "C:\\Users\\Tony\\Desktop\\TexWordCompilerTestFiles\\Test";
+        //private string TempOutput = "C:\\Users\\Tony\\Desktop\\TexWordCompilerTestFiles\\Test";
+        private string TempOutput = "C:\\Users\\TBarnett\\Desktop\\TexWordCompilerTestFiles\\Test";
 
         [Test]
         public void Parser()
@@ -192,8 +193,16 @@ namespace TexWordCompiler
             OutputFiles.Output o = new OutputFiles.Output();
             o.AddLine("new line");
 
+            FileInfo f = new FileInfo(TempOutput + "\\testOutput.txt");
+            if (!f.Directory.Exists)
+            {
+                f.Directory.Create();
+            }
+            //if(!
+
             using (StreamWriter r = new StreamWriter(TempOutput + "\\testOutput.txt"))
             {
+
                 r.WriteLine(o.GetXml());
             }
         }
