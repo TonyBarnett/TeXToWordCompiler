@@ -4,5 +4,6 @@
 *.suo
 *.ini
 Debug
-*.ini
-*.suo
+*.cahce
+*.log
+*.tlog
