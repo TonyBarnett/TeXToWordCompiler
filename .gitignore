@@ -3,7 +3,7 @@
 *.tex
 *.suo
 *.ini
-Debug
+Debug/
 *.cahce
 *.log
 *.tlog
