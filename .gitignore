@@ -7,3 +7,5 @@ Debug/
 *.cahce
 *.log
 *.tlog
+*.settings
+*.resources
