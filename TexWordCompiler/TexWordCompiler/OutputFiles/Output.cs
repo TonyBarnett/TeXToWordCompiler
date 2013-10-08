@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Office.Interop.Word;
+using System.Text.RegularExpressions;
+using System.IO;
 
 namespace TexWordCompiler.OutputFiles
 {
@@ -10,7 +12,6 @@ namespace TexWordCompiler.OutputFiles
     {
         private Document _Document;
         Paragraph _Paragraph;
-
 
         public Output()
         {
@@ -35,13 +36,10 @@ namespace TexWordCompiler.OutputFiles
             _Paragraph.Range.Text += string.Format("{0}\n", text);
         }
 
-        /// <summary>
-        /// Get xml document.
-        /// </summary>
-        /// <returns></returns>
-        public string GetXml()
+        public void Save(string where)
         {
-            return _Document.WordOpenXML;
+            string thing = where + "\\thing.docx";
+            _Document.SaveAs(thing, Microsoft.Office.Interop.Word.WdSaveFormat.wdFormatDocument);
         }
     }
 }

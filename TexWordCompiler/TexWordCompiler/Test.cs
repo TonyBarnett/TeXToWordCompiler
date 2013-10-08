@@ -187,30 +187,37 @@ namespace TexWordCompiler
         //    Zip();
         //}
 
-        [Test]
-        public void MakeSimpleDocument()
+        //[Test]
+        //public void MakeSimpleDocument()
+        //{
+        //    OutputFiles.Output o = new OutputFiles.Output();
+        //    o.AddLine("new line");
+
+        //    FileInfo f = new FileInfo(TempOutput + "\\testOutput.txt");
+        //    if (!f.Directory.Exists)
+        //    {
+        //        f.Directory.Create();
+        //    }
+        //    //if(!
+
+        //    using (StreamWriter r = new StreamWriter(TempOutput + "\\testOutput.txt"))
+        //    {
+
+        //        r.WriteLine(o.GetXml());
+        //    }
+        //}
+
+        private string ContentType()
         {
-            OutputFiles.Output o = new OutputFiles.Output();
-            o.AddLine("new line");
-
-            FileInfo f = new FileInfo(TempOutput + "\\testOutput.txt");
-            if (!f.Directory.Exists)
-            {
-                f.Directory.Create();
-            }
-            //if(!
-
-            using (StreamWriter r = new StreamWriter(TempOutput + "\\testOutput.txt"))
-            {
-
-                r.WriteLine(o.GetXml());
-            }
+            return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + Environment.NewLine + "<Types xmlns=\"http://schemas.openxmlformats.org/package/2006/content-types\"><Default Extension=\"rels\" ContentType=\"application/vnd.openxmlformats-package.relationships+xml\"/><Default Extension=\"xml\" ContentType=\"application/xml\"/><Override PartName=\"rels\" ContentType=\"application/vnd.openxmlformats-package.relationships+xml\"/><Override PartName=\"xml\" ContentType=\"application/xml\"/></Types>";
         }
 
         [Test]
         public void InteropTest()
         {
             OutputFiles.Output sh = new OutputFiles.Output();
+            sh.AddLine("soighdoigh");
+            sh.Save(TempOutput);
         }
 
         [Test]
