@@ -395,47 +395,47 @@ namespace TexWordCompiler
                 string pattern1 = @"\\(.+)\{(.+)\}\{(.+)\}[(.+)]"; //similar to table \thing{}{}[]
                 string pattern2 = @"\\(.+)\{(.+)\}\{(.+)\}"; //similar to renewcommand \thing{}{}
                 string pattern3 = @"\\(.+)\{(.+)\}"; //single command \thing{}
-                string pattern4 = @"\\(.+)\{(.+)"; //multiLine command \thing{\n}
+                //string pattern4 = @"\\(.+)\{(.+)"; //multiLine command \thing{\n}
                 string pattern5 = @"\\.+[^\\]\{.+\\.+[^\\]\{"; //single block with embedded \thing1{\thing2{blah}}
 
                 MatchCollection match;
 
-                string thing = r.ReadLine();
+                string line = r.ReadLine();
 
-                thing = thing.TrimStart(new char[] { '\t' });
+                line = line.TrimStart(new char[] { '\t' });
 
 
-                if(thing.Replace(@"\%","").Contains('%'))// remove any comments
+                if(line.Replace(@"\%","").Contains('%'))// remove any comments
                 {
-                    thing = thing.Replace(@"\%","").Split('%')[0];
+                    line = line.Replace(@"\%","").Split('%')[0];
                 }
 
-                if (thing.Count() == 0)//possible if line was a comment or just spacing
+                if (line.Count() == 0)//possible if line was a comment or just spacing
                 {
                     return;
                 }
 
                 //if there are more unescapes left braces than unescaped right braces then multi-line so 
                 // consume lines until you find the end.
-                while (thing.Replace("\\{", "").Count(t => t == '{') > thing.Replace("\\}", "").Count(t => t == '}'))
+                while (line.Replace("\\{", "").Count(t => t == '{') > line.Replace("\\}", "").Count(t => t == '}'))
                 {
-                    thing += r.ReadLine();
+                    line += r.ReadLine();
                 }
 
-                while (thing[0] == '%')
+                while (line[0] == '%')
                 {
-                    thing = r.ReadLine();
+                    line = r.ReadLine();
                 }
 
-                if (Regex.IsMatch(thing, pattern5))// \blah{ anything \blah2{} gst }
+                if (Regex.IsMatch(line, pattern5))// \blah{ anything \blah2{} gst }
                 {
-                    ParseLine(thing);
+                    ParseLine(line);
                 }
 
-                else if (Regex.IsMatch(thing, pattern1))// \blah{}{}[]
+                else if (Regex.IsMatch(line, pattern1))// \blah{}{}[]
                 {
 
-                    match = Regex.Matches(thing, pattern1);
+                    match = Regex.Matches(line, pattern1);
 
                     foreach (Match m in match)
                     {
@@ -446,9 +446,9 @@ namespace TexWordCompiler
                     }
                 }
 
-                else if (Regex.IsMatch(thing, pattern2))// \blah{}{}
+                else if (Regex.IsMatch(line, pattern2))// \blah{}{}
                 {
-                    match = Regex.Matches(thing, pattern2);
+                    match = Regex.Matches(line, pattern2);
 
                     foreach (Match m in match)
                     {
@@ -458,9 +458,9 @@ namespace TexWordCompiler
                     }
                 }
 
-                else if (Regex.IsMatch(thing, pattern3))// \blah{}
+                else if (Regex.IsMatch(line, pattern3))// \blah{}
                 {
-                    match = Regex.Matches(thing, pattern3);
+                    match = Regex.Matches(line, pattern3);
 
                     foreach (Match m in match)
                     {
