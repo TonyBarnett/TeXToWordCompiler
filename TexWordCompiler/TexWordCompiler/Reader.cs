@@ -10,6 +10,14 @@ namespace TexWordCompiler
 {
     public class Reader : StreamReader
     {
+        public enum LineType
+        {
+            Line,
+            Environment,
+            ParagraphBreak,
+
+        }
+
         public class Header
         {
             public enum Type
@@ -78,13 +86,13 @@ namespace TexWordCompiler
 
                     if (m.Success)
                     {
-                        Match subM = Regex.Match(line,  @"\{(.+)\}\{(.+)\}"); //if it's a renewcommand then save it as a macro
+                        Match subM = Regex.Match(line, @"\{(.+)\}\{(.+)\}"); //if it's a renewcommand then save it as a macro
                         if (subM.Success)
                         {
                             Macro = new Dictionary<string, string>();
 
                             Macro.Add(subM.Groups[1].ToString(), subM.Groups[2].ToString());
-                            
+
                         }
                         else
                         {
@@ -405,9 +413,9 @@ namespace TexWordCompiler
                 line = line.TrimStart(new char[] { '\t' });
 
 
-                if(line.Replace(@"\%","").Contains('%'))// remove any comments
+                if (line.Replace(@"\%", "").Contains('%'))// remove any comments
                 {
-                    line = line.Replace(@"\%","").Split('%')[0];
+                    line = line.Replace(@"\%", "").Split('%')[0];
                 }
 
                 if (line.Count() == 0)//possible if line was a comment or just spacing
@@ -476,7 +484,7 @@ namespace TexWordCompiler
             /// <param name="r"></param>
             public Line()
             {
- 
+
             }
 
             //public Line(StreamReader r)
@@ -529,18 +537,11 @@ namespace TexWordCompiler
         public Reader(string fileName)
             : base(fileName)
         {
-            Thread t = new Thread(new ThreadStart(GetFileLength));
-            t.Start();
-        }
-
-        private void GetFileLength()
-        {
-            FileLength = (int)BaseStream.Length;
+            _Tex = new TeX();
 
             Sl(string.Format("file length = {0}", FileLength.ToString("#,#0")));
-
-            _Tex = new TeX();
         }
+
 
         /// <summary>
         /// returns either a word, environment, symbol etc.
@@ -548,7 +549,6 @@ namespace TexWordCompiler
         /// <returns></returns>
         public Header GetHeaderInformation()
         {
-
             StringBuilder line = new StringBuilder();
 
             if (Peek() == '%') // Consume line and newline before processing
@@ -575,15 +575,13 @@ namespace TexWordCompiler
                 Read();
             }
 
-            Header l = new Header(line.ToString());
+            Header h = new Header(line.ToString());
 
-            if (l.CommandType == "") // was either a begin document or something I didn't understand 
-                                       // so I feel I should ignore :)
+            if (h.CommandType == "") // was either a begin document or something I didn't understand 
+                // so I feel I should ignore :)
                 return null;
 
-            return l;
-
-
+            return h;
         }
 
         public string ParseLine()

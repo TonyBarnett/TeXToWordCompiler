@@ -8,55 +8,52 @@ namespace TexWordCompiler
 {
     public class Writer
     {
+        /// <summary>
+        /// Directory to write new file.
+        /// </summary>
         private DirectoryInfo _Dir;
+        
+        /// <summary>
+        /// Name of new file.
+        /// </summary>
         private FileInfo _File;
+
+        private TextReader _Reader;
+        private OutputFiles.Output _Output;
 
         public Writer(string directory, string fileName)
         {
             _Dir = new DirectoryInfo(directory);
             _File = new FileInfo(string.Format("{0}\\{1}", directory, fileName.Split('.')[0]));
-
-            CreateDirectories();
+            _Output = new OutputFiles.Output();
+            _Reader = new Reader(_File.FullName);
         }
 
-        private void CreateDirectories()
+        public void NewParagraph()
         {
-            DirectoryInfo d = new DirectoryInfo(_Dir.FullName + "/" + _File.Name);
-            if (d.Exists)
-            {
-                d.Delete(true);
-            }
-
-            _Dir.CreateSubdirectory(_File.Name);
-
-            _Dir.CreateSubdirectory(string.Format("{0}/_rels", _File.Name));
-            _Dir.CreateSubdirectory(string.Format("{0}/customXml", _File.Name));
-            _Dir.CreateSubdirectory(string.Format("{0}/docProps", _File.Name));
-            _Dir.CreateSubdirectory(string.Format("{0}/word", _File.Name));
+            _Output.NewParagragh();
         }
 
-        /// <summary>
-        /// Appends output to file fileName then add newLine 
-        /// character
-        /// </summary>
-        /// <param name="fileName">relative to input directory</param>
-        /// <param name="output"></param>
-        public void WriteFile(string fileName, string output)
+        public void WriteLine(string line)
         {
-            FileInfo f = new FileInfo(string.Format("{0}\\{1}", _Dir.FullName, fileName));
-            
-            using (StreamWriter s = new StreamWriter(f.FullName))
+            _Output.AddLine(line);
+        }
+
+        public void Done()
+        {
+            _Output.Save(_Dir.FullName);
+        }
+
+        public void Read()
+        {
+            Reader.LineType lineType;
+            using (Reader r = new Reader(_File.FullName))
             {
-                if (!f.Exists)
+                while (!r.EndOfStream)
                 {
-                    if (!f.Directory.Exists)
-                    {
-                        f.Directory.Create();
-                    }
-                    f.Create();
+                    string line = r.ParseLine();
+                    Reader.Header header = r.GetHeaderInformation();
                 }
-
-                s.Write(string.Format("{0}{1}", output, Environment.NewLine));
             }
         }
     }
