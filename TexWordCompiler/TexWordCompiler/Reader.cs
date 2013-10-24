@@ -144,6 +144,7 @@ namespace TexWordCompiler
         /// </summary>
         public class Line
         {
+            public bool EndParagraph = false;
             /// <summary>
             /// List all words that are in italics,
             /// 0 based index.
@@ -183,156 +184,19 @@ namespace TexWordCompiler
             /// </summary>
             public string Equation;
 
-            //public void GetNextBlock(StreamReader r)
-            //{
-            //    //Maybe read entire line instead then Regex through it to get information>
-            //    //will probably be quicker and definately be easier?
-
-            //    //consume all new line characters
-            //    while ((char)r.Peek() == '\n' || (char)r.Peek() == '\r')
-            //    {
-            //        r.Read();
-            //    }
-            //    //place current character into 'current' then
-            //    //work out what to do and append to sb.
-            //    //When done chuck sb out to Line
-            //    StringBuilder sb = new StringBuilder();
-            //    char current = new char();
-            //    string specialWord = "";
-            //    int word = 0; //current word number
-            //    //if not end of line or begin of comment
-            //    while ((char)r.Peek() != '\n' && (char)r.Peek() != '\r' && (char)r.Peek() != '%')
-            //    {
-            //        current = (char)r.Read();
-
-            //        switch (current)
-            //        {
-            //            case '\\':
-            //                if (TeX.EscapedChars.Contains((char)r.Peek()))
-            //                {
-            //                    sb.Append((char)r.Read());
-            //                    break;
-            //                }
-
-            //                StringBuilder s = new StringBuilder();
-            //                while ((char)r.Peek() != '\n' &&
-            //                    (char)r.Peek() != '\r' &&
-            //                    (char)r.Peek() != '{' &&
-            //                    (char)r.Peek() != ' ')
-            //                {
-            //                    s.Append((char)r.Read());
-            //                }
-
-            //                if ((char)r.Peek() == ' ' || //if a macro (either built in 
-            //                    (char)r.Peek() == '\n' || // or custom
-            //                    (char)r.Peek() == '\r'
-            //                    )
-            //                {
-
-            //                    ThisLine = specialWord = s.ToString();
-            //                }
-
-            //                else if ((char)r.Peek() == '{') //if a command or environment
-            //                {
-            //                    bool done = false;
-            //                    while (!done)
-            //                    {
-            //                        current = (char)r.Read();
-            //                        while (current != '}')
-            //                        {
-            //                            current = (char)r.Read(); //consume all new lines and tabs
-            //                            while (current == '\n' || current == '\r' || current == '\t')
-            //                            {
-            //                                current = (char)r.Read();
-            //                            }
-
-            //                            sb.Append(current);
-            //                            current = (char)r.Peek();
-            //                        }
-            //                        current = (char)r.Read(); //consume close brace
-            //                        if ((char)r.Peek() != '{')
-            //                        {
-            //                            done = true;
-            //                        }
-            //                    }
-            //                }
-
-            //                else
-            //                    throw new Exception(string.Format("{0} was an unexpected character", (char)r.Read()));
-
-            //                //if { then do something else work out what you 
-            //                //just read
-            //                break;
-
-            //            case ' ':
-            //                word++;
-            //                sb.Append(current);
-            //                break;
-
-            //            default:
-            //                sb.Append(current);
-            //                break;
-            //        }
-
-            //    }
-
-            //        switch (sb.ToString()) // Work out what to do with what you've read
-            //        {
-            //            case "enumerate":
-            //            case "itemize":
-            //                string line = "";
-            //                string block = "";
-            //                while (line != string.Format("\\end{{{0}}}",sb.ToString()))
-            //                {
-            //                    line = line.Replace("\t", "").Replace("\r", "").Replace("\n", "");
-            //                    block += line;
-            //                    line = r.ReadLine();
-            //                }
-            //                listEnvironment = new List<string>();
-            //                listEnvironment.AddRange(block.Substring(5).Replace("\\item ","|").Split('|'));
-            //                break;
-            //            case "section":
-            //            case "section*":
-
-            //                    break;
-            //            case "subsection":
-            //            case "subsection*":
-
-            //                    break;
-            //            case "subsubsection":
-            //            case "subsubsection*":
-
-            //                    break;
-
-            //            default:
-            //                break;
-            //        }
-
-            //    current = (char)r.Read();
-
-            //    if (current == '%')  //if a comment is added to the 
-            //    {                   //line consume the rest of the 
-            //        while (r.Peek() != '\n') // line and ignore
-            //        {
-            //            r.Read();
-            //        }
-            //    }
-
-            //    //while (current == '\n' ||
-            //    //    current == '\r')
-            //    //{
-            //    //    current = (char)r.Read();
-            //    //}
-            //}
-
             public void ParseLine(string line)
             {
                 //use braces to know if you're within a brace or not and then 
                 //assign to the correct list accordingly
 
-
                 // Gotta remove the escaped ones to only count the real ones.
                 string temp = line.Replace("\\{", "").Replace("\\}", "").Replace("\\\\", "");
+
+                if (temp == Environment.NewLine)
+                {
+                    EndParagraph = true;
+                    return;
+                }
 
                 //int braces = 0; // keep a record of how many open braces we've seen
                 int listCounter = 0;
@@ -347,12 +211,12 @@ namespace TexWordCompiler
                         case '\\':
                             StringBuilder miniSb = new StringBuilder();
                             i++;
-                            while (temp[i] != ' ' && temp[i] != '{' && i < temp.Length)
+                            while (i < temp.Length && temp[i] != ' ' && temp[i] != '{' )
                             {
                                 miniSb.Append(temp[i++]);
                             }
 
-                            if (temp[i] == ' ')
+                            if (i < temp.Length && temp[i] == ' ')
                             {
                                 sb[listCounter].Append(miniSb.ToString());
                             }
@@ -481,52 +345,10 @@ namespace TexWordCompiler
             /// <summary>
             /// Basic constructor. Nothing to really initialse
             /// </summary>
-            /// <param name="r"></param>
             public Line()
             {
 
             }
-
-            //public Line(StreamReader r)
-            //{
-            //    string pattern1 = @"\\(.+)\{(.+)\}\{(.+)\}[(.+)]"; //similar to table \thing{}{}[]
-            //    string pattern2 = @"\\(.+)\{(.+)\}\{(.+)\}"; //similar to renewcommand \thing{}{}
-            //    string pattern3 = @"\\(.+)\{(.+)\}"; //single command \thing{}
-            //    string pattern4 = @"\\(.+)\{(.+)"; //multiLine command \thing{\n}
-
-            //    Match m;
-
-            //    string thing = r.ReadLine();
-
-            //    while (thing[0] == '%')
-            //    {
-            //        thing = r.ReadLine();
-            //    }
-            //    while (Regex.IsMatch(thing, pattern4) && //If thing runs over multiple lines, grab them all
-            //        !Regex.IsMatch(thing, pattern3))
-            //    {
-            //        thing += r.ReadLine();
-            //    }
-
-            //    if (Regex.IsMatch(thing, pattern1))// \blah{}{}[]
-            //    {
-
-            //    }
-
-            //    else if (Regex.IsMatch(thing, pattern2))// \blah{}{}
-            //    {
-
-            //    }
-
-            //    else if (Regex.IsMatch(thing, pattern3))// \blah{}
-            //    {
-            //        m = Regex.Match(thing, pattern3);
-
-            //        string type = m.Groups[1].Value;
-            //        string output = m.Groups[2].Value;
-            //    }
-
-            //}
         }
 
         public event SetLabel Sl;
@@ -539,7 +361,7 @@ namespace TexWordCompiler
         {
             _Tex = new TeX();
 
-            Sl(string.Format("file length = {0}", FileLength.ToString("#,#0")));
+            //Sl(string.Format("file length = {0}", FileLength.ToString("#,#0")));
         }
 
 
@@ -584,11 +406,11 @@ namespace TexWordCompiler
             return h;
         }
 
-        public string ParseLine()
+        public Line ParseLine()
         {
             Line l = new Line();
             l.GetNextBlock(this);
-            return l.ThisLine;
+            return l;
         }
 
     }

@@ -16,7 +16,7 @@ namespace TexWordCompiler
 
     public partial class Form1 : Form
     {
-        private Reader _Reader;
+        private string _Input;
         private FileInfo _File;
 
         public Form1()
@@ -51,8 +51,7 @@ namespace TexWordCompiler
             else
             {
                 textBox1.Text = filenames[0];
-                _Reader = new Reader(textBox1.Text);
-                _Reader.Sl += new SetLabel(SetLabel);
+                _Input = textBox1.Text;
             }
         }
 
@@ -68,7 +67,7 @@ namespace TexWordCompiler
             {
                 label1.Text = "working...";
 
-                Writer w = new Writer(_File.DirectoryName, _File.Name);
+                //Writer w = new Writer(_File.DirectoryName, _File.Name);
                 Thread t = new Thread(new ThreadStart(MainLoop));
                 t.Start();
             }
@@ -88,70 +87,10 @@ namespace TexWordCompiler
 
         private void MainLoop()
         {
-            Reader r = _Reader;
-            FileInfo f = _File;
-            Writer w = new Writer(f.DirectoryName, f.Name);
-            List<Reader.Header> headerInfo = new List<Reader.Header>();
-
-            while (!Reader.Header.IsEnd)
-            {
-                Reader.Header h = _Reader.GetHeaderInformation();
-                if (h != null)
-                {
-                    headerInfo.Add(h);
-                }
-                //w.WriteFile(string.Format("{0}\\test.txt", f.Name.Split('.')[0]), output);
-            }
-
-            while (!r.EndOfStream)
-            {
-                string ything = r.ParseLine();
-            }
-
-            #region xmlTest
-            Document topXml = new Document("root");
-
-            foreach (Reader.Header h in headerInfo)
-            {
-                Document element = new Document("element", "Type", h.CommandType);
-
-                if (h.Optionals != null)
-                {
-                    int i = 0;
-                    foreach (string s in h.Optionals)
-                    {
-                        element.AddAttribute("optionalAttribute" + i++.ToString(), s);
-                    }
-                }
-
-                if (h.Macro != null)
-                {
-                    foreach (string s in h.Macro.Keys)
-                    {
-                        Document macro = new Document("Macro", "Input", s, h.Macro[s]);
-                        element.Add(macro);
-                    }
-                }
-
-                Document value = new Document("Output");
-                if(h.Values != null)
-                    value.SetValue(string.Format("{0}", h.Values[0]));
-                element.Add(value);
-                 
-                topXml.Add(element);
-            }
-
-            using (StreamWriter writer = new StreamWriter(string.Format("{0}\\test.xml",f.DirectoryName)))
-            {
-                writer.Write(topXml.GetXml());
-            }
-            #endregion
-
-            //Time to do something about the header information that's stored in headerInfo,
-            //I advise putting something in the TeX class to work out what they mean then use that to
-            //spit stuff out to writer
-            //Also you may want to sort out "renewCommand"s... The reader spits them out funny
-            //I think the renewCommands thing is sorted, prints to Xml ok
+            FileInfo f = new FileInfo(textBox1.Text);
+            Output o = new Output(f.FullName, string.Format("{0}\\{1}",f.Directory.FullName, f.Name));
+            Thread t = new Thread(new ThreadStart(o.Run));
+            t.Start();
         }
     }
 }

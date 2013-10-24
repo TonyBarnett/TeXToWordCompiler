@@ -71,14 +71,6 @@ namespace TexWordCompiler
         }
 
         [Test]
-        public void InteropTest()
-        {
-            OutputFiles.Output sh = new OutputFiles.Output();
-            sh.AddLine("soighdoigh");
-            sh.Save(TempOutput);
-        }
-
-        [Test]
         public void Zip()
         {
             //DirectoryInfo dir = new DirectoryInfo(@"C:\\Users\\Tony\\Desktop\\test_docx");
