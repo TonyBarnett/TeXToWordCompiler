@@ -144,6 +144,12 @@ namespace TexWordCompiler
         /// </summary>
         public class Line
         {
+            private string _Pattern1 = @"\\(.+)\{(.+)\}\{(.+)\}[(.+)]"; //similar to table \thing{}{}[]
+            private string _Pattern2 = @"\\(.+)\{(.+)\}\{(.+)\}"; //similar to renewcommand \thing{}{}
+            private string _Pattern3 = @"\\(.+)\{(.+)\}"; //single command \thing{}
+            //private string pattern4 = @"\\(.+)\{(.+)"; //multiLine command \thing{\n}
+            private string _Pattern5 = @"\\.+[^\\]\{.+\\.+[^\\]\{"; //single block with embedded \thing1{\thing2{blah}}
+
             public bool EndParagraph = false;
             /// <summary>
             /// List all words that are in italics,
@@ -264,12 +270,6 @@ namespace TexWordCompiler
             public void GetNextBlock(StreamReader r)
             {
                 //Read line, work out what it says
-                string pattern1 = @"\\(.+)\{(.+)\}\{(.+)\}[(.+)]"; //similar to table \thing{}{}[]
-                string pattern2 = @"\\(.+)\{(.+)\}\{(.+)\}"; //similar to renewcommand \thing{}{}
-                string pattern3 = @"\\(.+)\{(.+)\}"; //single command \thing{}
-                //string pattern4 = @"\\(.+)\{(.+)"; //multiLine command \thing{\n}
-                string pattern5 = @"\\.+[^\\]\{.+\\.+[^\\]\{"; //single block with embedded \thing1{\thing2{blah}}
-
                 MatchCollection match;
 
                 string line = r.ReadLine();
@@ -299,15 +299,14 @@ namespace TexWordCompiler
                     line = r.ReadLine();
                 }
 
-                if (Regex.IsMatch(line, pattern5))// \blah{ anything \blah2{} gst }
+                if (Regex.IsMatch(line, _Pattern5))// \blah{ anything \blah2{} gst }
                 {
                     ParseLine(line);
                 }
 
-                else if (Regex.IsMatch(line, pattern1))// \blah{}{}[]
+                else if (Regex.IsMatch(line, _Pattern1))// \blah{}{}[]
                 {
-
-                    match = Regex.Matches(line, pattern1);
+                    match = Regex.Matches(line, _Pattern1);
 
                     foreach (Match m in match)
                     {
@@ -318,9 +317,9 @@ namespace TexWordCompiler
                     }
                 }
 
-                else if (Regex.IsMatch(line, pattern2))// \blah{}{}
+                else if (Regex.IsMatch(line, _Pattern2))// \blah{}{}
                 {
-                    match = Regex.Matches(line, pattern2);
+                    match = Regex.Matches(line, _Pattern2);
 
                     foreach (Match m in match)
                     {
@@ -330,9 +329,9 @@ namespace TexWordCompiler
                     }
                 }
 
-                else if (Regex.IsMatch(line, pattern3))// \blah{}
+                else if (Regex.IsMatch(line, _Pattern3))// \blah{}
                 {
-                    match = Regex.Matches(line, pattern3);
+                    match = Regex.Matches(line, _Pattern3);
 
                     foreach (Match m in match)
                     {

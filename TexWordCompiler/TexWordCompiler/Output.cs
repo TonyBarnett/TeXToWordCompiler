@@ -21,7 +21,8 @@ namespace TexWordCompiler
 
         public void Run()
         {
-            using (DocX o = DocX.Create(string.Format("{0}\\.Docx", _OutputName)))
+            
+            using (DocX o = DocX.Create(_OutputName.Replace(".tex", ".docx")))
             {
                 using (Reader r = new Reader(_InputName))
                 {
@@ -54,7 +55,7 @@ namespace TexWordCompiler
                         }
                     }
                 }
-
+                string thing = o.Xml.ToString();
                 o.SaveAs(_OutputName);
             }
         }
