@@ -1,29 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.IO;
-using System.Threading;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace TexWordCompiler
 {
     public class Reader : StreamReader
     {
-
         private TeX _Tex;
 
         /// <summary>
-        /// Strip any escaped special characters from a string. Useful if you want 
+        /// Strip any escaped special characters from a string. Useful if you want
         /// to count true open and close braces for instance.
         /// </summary>
         /// <param name="line">a TeX line.</param>
         /// <returns>a nonTeX line.</returns>
         private string EscapelessLine(string line)
         {
-            return line.Replace("\\\\","").Replace("\\{", "").Replace("\\}", "").Replace("\\[", "").Replace("\\]", "");
+            return line.Replace("\\\\", "").Replace("\\{", "").Replace("\\}", "").Replace("\\[", "").Replace("\\]", "");
         }
-
 
         public Reader(string fileName)
             : base(fileName)
@@ -34,13 +32,17 @@ namespace TexWordCompiler
         public void ParseHeader(Stream s)
         {
             #region Regexs
+
             // \thing{blah}
             string regexPattern = @"\\\{w+}\{{\w+}\}";
             //\thing[optionalBlah]{blah}
             string regexPatternOptionals = @"\\\{w+}\[{\w+}\]\{{\w+}\}";
             //\thing{blah1}{blah2}
             string regexPatternMacro = @"\\\{w+}\{{\w+}\}\{{\w+}\}";
-            #endregion
+            //\thing
+            string regexPatternNoParams = @"\\{\w+}";
+
+            #endregion Regexs
 
             bool done = false; // keep reading header information until I say so!
 
@@ -68,7 +70,12 @@ namespace TexWordCompiler
 
                     // Let's remove any newLine characters.
                     line.Replace("\n", "").Replace("\r", "");
-                    
+
+                    while (line[0] == '%')
+                    {
+                        line = ReadLine();
+                    }
+
                     if (line == @"\\begin{document}")
                     {
                         // We're finished, move onto the next line and let's get outta here.
@@ -77,9 +84,25 @@ namespace TexWordCompiler
                         break;
                     }
 
+                    else if (Regex.IsMatch(line, regexPatternMacro))
+                    {
+                    }
+
+                    else if (Regex.IsMatch(line, regexPatternOptionals))
+                    {
+                    }
+
+                    else if (Regex.IsMatch(line, regexPattern))
+                    {
+                    }
+
+                    else
+                    {
+                        throw new Exception(string.Format("I have no idea what \"{0}\" is in terms of header information.", line));
+                    }
                     if (r.EndOfStream)
                     {
-                        throw new Exception("got through the whole file without a \\begin{Document}, This means something went wrong or your input file wasn't right!");
+                        throw new Exception("Got through the whole file without a \\begin{Document}, This means something went wrong or your input file wasn't right!");
                     }
                 }
             }
