@@ -34,40 +34,25 @@ namespace TexWordCompiler
         }
 
         [Test]
-        public void LineIn() // finish me... I got too tired and a little bored last time
+        public void LineIn()
         {
-            //Reader.Line r = new Reader.Line();
+            string line = "let's get TeXy with \\things and \\textbf{otherThings} % Complete with commenty goodness \\% % ahoyhoy";
 
-            DirectoryInfo dir = new DirectoryInfo("..\\");
+            List<string> output = TeX.ReadLine(line);
+        }
 
-            FileInfo f = new FileInfo(String.Format("{0}Test.Tex", dir.FullName));
+        [Test]
+        public void ReplaceTex()
+        {
+            List<string> tex = new List<string>();
+            tex.Add(@"This is {1} line with a citation {2}");
+            tex.Add(@"\\textbf{a tex}");
+            tex.Add(@"\\cite{person}");
 
-            //f.Create();
-
-            using (StreamWriter w = new StreamWriter(f.FullName))
+            for (int i = 1; i < tex.Count; i++)
             {
-                w.WriteLine(@"an existing residential building. \emph{Building regulations part L2B} detail the measures ");
-                w.WriteLine(@"%comment line");
-                w.WriteLine(@"\thing{new-build development}{potato}");
-                w.WriteLine(@"\thing{trees}{with}[optional Monkeys]");
-
+                string output = TeX.ReplaceTeX(tex[i]);
             }
-
-            using (StreamReader sr = new StreamReader(f.FullName))
-            {
-                Dictionary<int, List<string>> outputs = new Dictionary<int, List<string>>();
-                Dictionary<int, List<string>> type = new Dictionary<int, List<string>>();
-                Dictionary<int, List<string>> parameters = new Dictionary<int, List<string>>();
-                Dictionary<int, List<string>> optionals = new Dictionary<int, List<string>>();
-
-
-                while (!sr.EndOfStream)
-                {
-                    //r.GetNextBlock(sr);
-
-                }
-            }
-            f.Delete();
         }
 
         [Test]
@@ -78,7 +63,6 @@ namespace TexWordCompiler
             DirectoryInfo outputDir = new DirectoryInfo(TempOutput);
             ZipFiles z = new ZipFiles(outputDir);
 
-
             List<DirectoryInfo> dirs = new List<DirectoryInfo>();
             dirs.Add(new DirectoryInfo(dir + "\\_rels"));
             dirs.Add(new DirectoryInfo(dir + "\\docProps"));
@@ -88,13 +72,38 @@ namespace TexWordCompiler
 
             z.AddFile(f);
 
-
-            foreach(DirectoryInfo d in dirs)
+            foreach (DirectoryInfo d in dirs)
             {
                 z.AddFolder(d);
             }
 
             z.Zip();
+        }
+
+        [Test]
+        public void EscapedCommentChar()
+        {
+            List<string> line = TeX.ReadLine(@"This is a line with an escaped \% in it. % not kidding");
+            List<string> correctLine = new List<string>();
+
+            correctLine.Add(@"This is a line with an escaped % in it. ");
+
+            Assert.AreEqual(line, correctLine);
+        }
+
+        [Test]
+        public void AddParagraph()
+        {
+            Novacode.DocX d = Novacode.DocX.Create("thing.docx");
+            List<List<string>> p = new List<List<string>>();
+
+            p.Add(new List<string>());
+            p[0].Add("let's get TeXy with {1} and {2}");
+            p[0].Add("\\textbf{Bold bits}");
+            p[0].Add("\\textit{italic bits}");
+            WordifyThings.AddParagraph(p, d);
+
+            d.Save();
         }
     }
 }

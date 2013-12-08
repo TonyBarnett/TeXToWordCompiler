@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using Novacode;
 using System.Text.RegularExpressions;
-using System.IO;
+using Novacode;
 
 namespace TexWordCompiler
 {
-    class Output
+    internal class Output
     {
+        private DocX _Document;
         private string _OutputName;
         private string _InputName;
 
@@ -17,17 +18,17 @@ namespace TexWordCompiler
         {
             _OutputName = outputName;
             _InputName = inputName;
+            _Document = DocX.Create(_OutputName);
         }
 
         public void Run()
         {
-            
             //using (DocX o = DocX.Create(_OutputName.Replace(".tex", ".docx")))
             //{
             //    using (Reader r = new Reader(_InputName))
             //    {
             //        //r.GetHeaderInformation();
-            //        // TODO: do something with said header information that 
+            //        // TODO: do something with said header information that
             //        // has been so lovingly prepared.
             //        //Reader.Line l;
             //        StringBuilder sb = new StringBuilder();

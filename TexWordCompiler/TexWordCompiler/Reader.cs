@@ -96,6 +96,10 @@ namespace TexWordCompiler
                     {
                     }
 
+                    else if (Regex.IsMatch(line, regexPatternNoParams))
+                    {
+                    }
+
                     else
                     {
                         throw new Exception(string.Format("I have no idea what \"{0}\" is in terms of header information.", line));
@@ -106,6 +110,24 @@ namespace TexWordCompiler
                     }
                 }
             }
+        }
+
+        public static string ParseLine(Stream s)
+        {
+            string temp = "";
+            using (StreamReader r = new StreamReader(s))
+            {
+                temp = r.ReadLine();
+            }
+            List<string> niceLine = TeX.ReadLine(temp);
+
+            for (int i = 1; i < niceLine.Count; i++)
+            {
+                niceLine[i] = TeX.ReplaceTeX(niceLine[i]);
+            }
+            string line = "";
+
+            return line;
         }
     }
 }
