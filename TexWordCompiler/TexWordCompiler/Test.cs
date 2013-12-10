@@ -42,20 +42,6 @@ namespace TexWordCompiler
         }
 
         [Test]
-        public void ReplaceTex()
-        {
-            List<string> tex = new List<string>();
-            tex.Add(@"This is {1} line with a citation {2}");
-            tex.Add(@"\\textbf{a tex}");
-            tex.Add(@"\\cite{person}");
-
-            for (int i = 1; i < tex.Count; i++)
-            {
-                string output = TeX.ReplaceTeX(tex[i]);
-            }
-        }
-
-        [Test]
         public void Zip()
         {
             //DirectoryInfo dir = new DirectoryInfo(@"C:\\Users\\Tony\\Desktop\\test_docx");
@@ -103,6 +89,35 @@ namespace TexWordCompiler
             p[0].Add("\\textit{italic bits}");
             WordifyThings.AddParagraph(p, d);
 
+            d.Save();
+        }
+
+        [Test]
+        public void ReplaceTex()
+        {
+            List<string> tex = new List<string>();
+            tex.Add(@"This is {1} line with a citation {2}");
+            tex.Add(@"\\textbf{a tex}");
+            tex.Add(@"\\cite{person}");
+
+            for (int i = 1; i < tex.Count; i++)
+            {
+                string output = TeX.ReplaceTeX(tex[i]);
+            }
+        }
+
+        [Test]
+        public void rlapTest()
+        {
+            Novacode.DocX d = Novacode.DocX.Create(@"T:\Google Drive\rlap.docx");
+            List<List<string>> tex = new List<List<string>>();
+
+            tex.Add(new List<string>());
+
+            tex[0].Add("`This is a quoted sentence{0}");
+            tex[0].Add("\\rlap{.}{'}");
+
+            WordifyThings.AddParagraph(tex, d);
             d.Save();
         }
     }

@@ -9,6 +9,16 @@ namespace TexWordCompiler
 {
     public static class WordifyThings
     {
+        private static string RemoveSpecialChars(string line)
+        {
+            foreach (string s in TeX.EscapedChars.Keys)
+            {
+                line = line.Replace(s, TeX.EscapedChars[s]);
+            }
+
+            return line.Replace('`', '\'').Replace("''", "\"");
+        }
+
         /// <summary>
         ///
         /// </summary>
@@ -17,8 +27,9 @@ namespace TexWordCompiler
         public static void AddParagraph(List<List<string>> lines, DocX doc)
         {
             Paragraph p = doc.InsertParagraph();
+            List<List<string>> l = lines;
 
-            foreach (List<string> ss in lines)
+            foreach (List<string> ss in l)
             {
                 MatchCollection mc = Regex.Matches(ss[0], @"\{[0-9]+\}");
                 string temp = ss[0];
@@ -32,31 +43,51 @@ namespace TexWordCompiler
 
                 string[] temps = temp.Split('¬');
 
-                p.Append(temps[0]);
-                //doc.Paragraphs.Add(p);
+                Append(p, temps[0]);
+
                 for (int i = 1; i < ss.Count; i++)
                 {
-                    string pattern = @"\\(?<type>[a-zA-Z0-9]+)(\{(?<output>[a-zA-Z0-9 ]+)\})?";
+                    string pattern = @"\\(?<type>[a-zA-Z0-9]+)(?:\{(?<output>[^\{\}]+)\})?(?:\{(?<output2>[^\{\}]+)\})?";
                     Match m = Regex.Match(ss[i], pattern);
                     switch (m.Groups["type"].Value)
                     {
                         case "textbf":
 
-                            p.Append(m.Groups["output"].Value).Bold();
+                            Append(p, m.Groups["output"].Value);
+                            p.Bold();
 
                             p.Append(temps[i]);
                             break;
 
+                        case "emph":
                         case "textit":
-                            p.Append(m.Groups["output"].Value).Italic();
-
-                            p.Append(temps[i]);
+                            Append(p, m.Groups["output"].Value);
+                            p.Italic();
+                            Append(p, temps[i]);
                             break;
+
+                        case "rlap":
+                            Append(p, m.Groups["output"].Value);
+                            Append(p, m.Groups["output2"].Value);
+                            break;
+
+                        default:
+                            throw new Exception(m.Groups["type"] + " is still under development");
                     }
                 }
 
                 string blah = doc.Xml.Value;
             }
+        }
+
+        /// <summary>
+        /// Appends text to p removing special characters as it goes
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="text"></param>
+        private static void Append(Paragraph p, string text)
+        {
+            p.Append(RemoveSpecialChars(text));
         }
     }
 }
