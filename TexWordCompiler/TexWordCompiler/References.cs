@@ -9,69 +9,69 @@ namespace TexWordCompiler
 {
     internal class References
     {
-        private List<string> _RefTypes;
-
-        private List<string> RefTypes
+        public enum RefType
         {
-            get
-            {
-                if (_RefTypes == null)
-                {
-                    _RefTypes = new List<string>();
-
-                    _RefTypes.Add("article");
-                    _RefTypes.Add("book");
-                    _RefTypes.Add("booklet");
-                    _RefTypes.Add("conference");
-                    _RefTypes.Add("inbook");
-                    _RefTypes.Add("incollection");
-                    _RefTypes.Add("inproceedings");
-                    _RefTypes.Add("manual");
-                    _RefTypes.Add("mastersthesis");
-                    _RefTypes.Add("misc");
-                    _RefTypes.Add("phdthesis");
-                    _RefTypes.Add("proceedings");
-                    _RefTypes.Add("techreport");
-                    _RefTypes.Add("unpublished");
-                }
-                return _RefTypes;
-            }
+            article,
+            book,
+            booklet,
+            conference,
+            inbook,
+            incollection,
+            inproceedings,
+            manual,
+            mastersthesis,
+            misc,
+            phdthesis,
+            proceedings,
+            techreport,
+            unpublished,
         }
+
+        private Dictionary<RefType, List<string>> RefStyle;
 
         private Dictionary<string, Dictionary<FileInfo, int>> _RefFiles;
 
         public References(FileInfo file)
         {
+            // The plan is: read through the file, find alll the @s,
+            // then store the key (@notThis{This,), the file name, and the position where we found the @
             _RefFiles = new Dictionary<string, Dictionary<FileInfo, int>>();
+            RefStyle = new Dictionary<RefType, List<string>>();
 
             using (StreamReader r = new StreamReader(file.FullName))
             {
-                StringBuilder RegexCheck = new StringBuilder();
-                foreach (string s in RefTypes)
-                {
-                    RegexCheck.Append(s + "|");
-                }
-
-                string regex = @"\@[" + RegexCheck.ToString().TrimEnd('|') + "]";
                 int position = 0;
                 while (!r.EndOfStream)
                 {
-                    string line = r.ReadLine();
-
-                    if (Regex.IsMatch(line, regex))
+                    char c = (char)r.Read();
+                    position++;
+                    if (c == '@')
                     {
-                        string tag = line.Split('{')[1];
-
-                        if (_RefFiles.ContainsKey(tag))
+                        int otherPosition = 0;
+                        while (c != '{')
                         {
-                            throw new Exception(string.Format("Trying to add {0} twice, tut tut!", tag));
+                            c = (char)r.Read();
+                            otherPosition++;
+                        }
+                        otherPosition++;
+
+                        StringBuilder sb = new StringBuilder();
+                        while (c != ',')
+                        {
+                            c = (char)r.Read();
+                            if (c != ',')
+                            {
+                                sb.Append(c);
+                                otherPosition++;
+                            }
                         }
 
-                        _RefFiles.Add(tag, new Dictionary<FileInfo, int>());
-                        _RefFiles[tag].Add(file, position);
-                    }
+                        _RefFiles.Add(sb.ToString(), new Dictionary<FileInfo, int>());
 
-                    position += line.Length;
+                        _RefFiles[sb.ToString()].Add(file, position - 1);
+
+                        position += otherPosition;
+                    }
                 }
             }
         }
@@ -79,11 +79,30 @@ namespace TexWordCompiler
         public References(List<FileInfo> files)
         {
             _RefFiles = new Dictionary<string, Dictionary<FileInfo, int>>();
+            RefStyle = new Dictionary<RefType, List<string>>();
         }
 
+        /// <summary>
+        /// Defines how the reference is printed and the order.
+        /// </summary>
+        /// <param name="refType"></param>
+        /// <param name="parts"></param>
+        public void AddRefStylePart(RefType refType, List<string> parts)
+        {
+            RefStyle.Add(refType, new List<string>());
+            foreach (string s in parts)
+            {
+                RefStyle[refType].Add(s);
+            }
+        }
+
+        /// <summary>
+        /// Gets the authors and year of reference who's key is refKey
+        /// </summary>
+        /// <param name="refKey"></param>
+        /// <returns></returns>
         public string GetAuthorYear(string refKey)
         {
-            string author = "";
             int year = 0;
             if (!_RefFiles.ContainsKey(refKey))
             {
@@ -92,43 +111,144 @@ namespace TexWordCompiler
 
             FileInfo f = _RefFiles[refKey].Keys.ToList()[0];
 
+            //count the number of open braces - closed braces
+            // We start counting after we've passed the first brace so start counting at 1
+
+            string reference = GetRefText(refKey);
+
+            string author = GetRefPart(reference, "author");
+
+            if (!int.TryParse(GetRefPart(reference, "year"), out year))
+            {
+                throw new Exception(string.Format("cant make an integer out of {0}", GetRefPart(reference, "author")));
+            }
+
+            return string.Format("{0}, {1}", author, year);
+
+            throw new Exception("Couldn't find both author and year");
+        }
+
+        public string GetReference(string refKey)
+        {
+            RefType type;
+            string reference = GetRefText(refKey, out type);
+            StringBuilder sb = new StringBuilder();
+            if (!RefStyle.ContainsKey(type))
+            {
+                throw new Exception("invalid type " + type.ToString());
+            }
+
+            foreach (string s in RefStyle[type])
+            {
+                sb.Append(GetRefPart(reference, s));
+                sb.Append(", ");
+            }
+            if (sb.Length == 0)
+            {
+                throw new Exception("Something went wrong. Quick, blame a programmer!");
+            }
+            return sb.ToString().Substring(0, sb.Length - 2);
+        }
+
+        private string GetRefText(string refKey)
+        {
+            if (!_RefFiles.ContainsKey(refKey))
+            {
+                throw new Exception(string.Format("can't find {0} in list of references", refKey));
+            }
+
+            FileInfo f = _RefFiles[refKey].Keys.ToList()[0];
+
+            StringBuilder sb = new StringBuilder();
             using (StreamReader r = new StreamReader(f.FullName))
             {
+                // Read until refernce in file.
                 for (int i = 0; i < _RefFiles[refKey][f]; i++)
                 {
                     r.Read();
                 }
 
-                char current = new char(), previous = new char();
-                StringBuilder sb = new StringBuilder();
+                char c = new char();
 
-                // keep reading until you find the first unescaped @ \ie next reference
-                while (current != '@' || (current == '@' && previous == '\\'))
+                while (c != '{')
                 {
-                    current = (char)r.Read();
-                    if (current != '\\' && previous != '\\')
+                    if (r.EndOfStream)
                     {
-                        sb.Append(current);
+                        throw new Exception("bad BibTeX file");
+                    }
+                    sb.Append(c = (char)r.Read());
+                }
+
+                sb.Append((char)r.Read()); // Skip the open brace.
+
+                int openBrace = 1;
+
+                while (openBrace != 0)
+                {
+                    if (r.EndOfStream)
+                    {
+                        throw new Exception("bad BibTeX file");
                     }
 
-                    if (Regex.IsMatch(sb.ToString(), @"author = \{[^\{\}]+\},"))
+                    c = (char)r.Read();
+
+                    if (c == '{')
                     {
-                        author = Regex.Match(sb.ToString(), @"author = \{{(?<a>[\{\}]+}\},").Groups["a"].Captures[0].Value;
+                        openBrace++;
+                    }
+                    else if (c == '}')
+                    {
+                        openBrace--;
                     }
 
-                    if (Regex.IsMatch(sb.ToString(), @"year = \{{.+}\},"))
-                    {
-                        author = Regex.Match(sb.ToString(), @"year = \{{(?<y>[\{\}]+}\},").Groups["y"].Captures[0].Value;
-                    }
-
-                    if (author != "" && year != 0)
-                    {
-                        return string.Format("{0}{1}", author, year);
-                    }
-                    previous = current;
+                    sb.Append(c);
                 }
             }
-            throw new Exception("Couldn't find both author and year");
+            return sb.ToString();
+        }
+
+        private string GetRefText(string refKey, out RefType type)
+        {
+            string text = GetRefText(refKey);
+
+            string t = Regex.Match(text, @"@(?<t>[^\{\}]+)\{").Groups["t"].Captures[0].Value;
+
+            type = (RefType)Enum.Parse(typeof(RefType), t.ToString());
+
+            return text;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="referenceString">A bibTeX reference</param>
+        /// <returns></returns>
+        private string GetRefPart(string referenceString, string part)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            referenceString = referenceString.Substring(referenceString.IndexOf(part) + part.Length);
+            referenceString = referenceString.Substring(referenceString.IndexOf('{') + 1);
+
+            int braces = 1, i = 0;
+
+            while (braces != 0)
+            {
+                if (referenceString[i] == '{')
+                {
+                    braces++;
+                }
+                if (referenceString[i] == '}')
+                {
+                    braces--;
+                }
+                if (braces != 0)
+                {
+                    sb.Append(referenceString[i++]);
+                }
+            }
+
+            return sb.ToString();
         }
     }
 }
