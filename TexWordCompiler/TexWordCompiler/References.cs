@@ -33,6 +33,22 @@ namespace TexWordCompiler
 
         public References(FileInfo file)
         {
+            Init(file);
+        }
+
+        public References(List<FileInfo> files)
+        {
+            _RefFiles = new Dictionary<string, Dictionary<FileInfo, int>>();
+            RefStyle = new Dictionary<RefType, List<string>>();
+
+            foreach (FileInfo f in files)
+            {
+                Init(f);
+            }
+        }
+
+         private void Init(FileInfo file)
+        {
             // The plan is: read through the file, find alll the @s,
             // then store the key (@notThis{This,), the file name, and the position where we found the @
             _RefFiles = new Dictionary<string, Dictionary<FileInfo, int>>();
@@ -74,12 +90,6 @@ namespace TexWordCompiler
                     }
                 }
             }
-        }
-
-        public References(List<FileInfo> files)
-        {
-            _RefFiles = new Dictionary<string, Dictionary<FileInfo, int>>();
-            RefStyle = new Dictionary<RefType, List<string>>();
         }
 
         /// <summary>

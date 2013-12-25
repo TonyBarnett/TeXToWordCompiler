@@ -112,22 +112,38 @@ namespace TexWordCompiler
             }
         }
 
-        public static string ParseLine(Stream s)
+        public List<string> ParseLine()
         {
-            string temp = "";
-            using (StreamReader r = new StreamReader(s))
+            List<string> output = new List<string>();
+            StringBuilder sb = new StringBuilder();
+            using (StreamReader r = this)
             {
-                temp = r.ReadLine();
+                sb.Append(r.ReadLine());
+                while (CountChar(sb.ToString(), '{') != CountChar(sb.ToString(), '{'))
+                {
+                    sb.Append(r.ReadLine());
+                }
             }
-            List<string> niceLine = TeX.ReadLine(temp);
 
-            for (int i = 1; i < niceLine.Count; i++)
-            {
-                niceLine[i] = TeX.ReplaceTeX(niceLine[i]);
-            }
-            string line = "";
+            int j = 1;
 
-            return line;
+            //MatchCollection mc = Regex.Matches(output[0], TeX.RegexLine);
+
+            //foreach (Match m in mc)
+            //{
+            //    output[0] = output[0].Replace(m.ToString(), "{" + j++ + "}");
+            //    output.Add(m.ToString());
+            //}
+            output = TeX.ReadLine(sb.ToString());
+
+            return output;
+        }
+
+        private int CountChar(string line, char c, char escapeChar = '\\')
+        {
+            string t = line.Replace(escapeChar.ToString() + c.ToString(), "");
+
+            return t.Count(x => x == c);
         }
     }
 }

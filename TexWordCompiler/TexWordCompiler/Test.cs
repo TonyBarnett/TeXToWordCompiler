@@ -9,38 +9,54 @@ namespace TexWordCompiler
     public class Test
     {
         //private string TempOutput = "C:\\Users\\Tony\\Desktop\\TexWordCompilerTestFiles\\Test";
-        private string TempOutput = "C:\\Users\\TBarnett\\Desktop\\TexWordCompilerTestFiles\\Test";
+        //private string TempOutput = "C:\\Users\\TBarnett\\Desktop\\TexWordCompilerTestFiles\\Test";
 
-        private string CrapDump = "";
+        //private string CrapDump = "";
 
         [Test]
-        public void Parser()
+        public void ParseLine()
         {
-            //Reader.Line r = new Reader.Line();
+            try
+            {
+                string line = @"\thing{bananas \test{grow} on \test } \otherThing{trees}";
+                using (StreamWriter w = new StreamWriter("ParseLine.Tex"))
+                {
+                    w.WriteLine(line);
+                }
 
-            //r.ParseLine(@"\thing{bananas \test{grow} on \test } \otherThing{trees}");
+                Reader r = new Reader("ParseLine.Tex");
 
-            List<string> output = new List<string>();
-            output.Add(@"{1} {3}");
-            output.Add(@"bananas {2} on test ");
-            output.Add(@"grow");
-            output.Add(@"trees");
+                List<string> o = r.ParseLine();
 
-            List<string> type = new List<string>();
-            type.Add("thing");
-            type.Add("test");
-            type.Add("otherThing");
+                List<string> output = new List<string>();
+                output.Add(@"{1} {3}");
+                output.Add(@"\thing{bananas {2} \test }");
+                output.Add(@"\test{grow}");
+                output.Add(@"\otherThing{trees}");
 
-            //Assert.AreEqual(r.Output, output);
-            //Assert.AreEqual(r.Type, type);
+                Assert.AreEqual(o, output);
+                //Assert.AreEqual(r.Type, type);
+            }
+            finally
+            {
+                FileInfo f = new FileInfo("ParseLine.TeX");
+
+                f.Delete();
+            }
         }
 
         [Test]
         public void LineIn()
         {
-            string line = "let's get TeXy with \\things and \\textbf{otherThings} % Complete with commenty goodness \\% % ahoyhoy";
-
+            string line = "let's get TeXy with \\things and \\textbf{otherThings}% Complete with commenty goodness \\% % ahoyhoy";
+            List<string> o = new List<string>();
             List<string> output = TeX.ReadLine(line);
+
+            o.Add("let's get TeXy with {1} and {2}");
+            o.Add("\\things");
+            o.Add("\\textbf{otherThings}");
+
+            Assert.AreEqual(output, o);
         }
 
         [Test]

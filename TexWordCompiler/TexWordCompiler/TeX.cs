@@ -81,6 +81,8 @@ namespace TexWordCompiler
             }
         }
 
+        public static string RegexLine = @"\\([a-zA-Z]+)(\{(.+)\})?";
+
         public string Title;
         public string Author;
         public string Date;
@@ -170,14 +172,13 @@ namespace TexWordCompiler
 
         public static List<string> ReadLine(string line)
         {
-            string regexLine = @"\\([a-zA-Z]+)(\{([a-zA-Z]+)\})?";
             string escapedLine = line;
 
             escapedLine = RemoveComments(escapedLine);
 
             if (Macros != null)
             {
-                foreach (string m in Macros.Keys)
+                foreach (string m in Macros.Keys.Where(x => escapedLine.Contains(x)))
                 {
                     escapedLine.Replace(m, Macros[m]);
                 }
@@ -190,13 +191,13 @@ namespace TexWordCompiler
             }
             r.Add(escapedLine);
 
-            MatchCollection match = Regex.Matches(escapedLine, regexLine);
+            MatchCollection match = Regex.Matches(escapedLine, RegexLine);
 
             int i = 1;
             foreach (Match m in match)
             {
                 r[0] = r[0].Replace(m.ToString(), "{" + i++ + "}");
-                r.Add("\\" + m.ToString()); // The compiler will interpret \thing as {tab}hing if the first \ is not escaped
+                r.Add(m.ToString());
             }
 
             return r;
