@@ -134,9 +134,7 @@ namespace TexWordCompiler
             //    output[0] = output[0].Replace(m.ToString(), "{" + j++ + "}");
             //    output.Add(m.ToString());
             //}
-            output = TeX.ReadLine(sb.ToString());
-
-            return output;
+            return TeX.ReadLine(sb.ToString());
         }
 
         private int CountChar(string line, char c, char escapeChar = '\\')

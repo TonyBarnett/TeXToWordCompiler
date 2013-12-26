@@ -18,7 +18,7 @@ namespace TexWordCompiler
         {
             try
             {
-                string line = @"\thing{bananas \test{grow} on \test } \otherThing{trees}";
+                string line = @"\thing{bananas \test{grow} on \blah } \otherThing{trees}";
                 using (StreamWriter w = new StreamWriter("ParseLine.Tex"))
                 {
                     w.WriteLine(line);
@@ -29,9 +29,10 @@ namespace TexWordCompiler
                 List<string> o = r.ParseLine();
 
                 List<string> output = new List<string>();
-                output.Add(@"{1} {3}");
-                output.Add(@"\thing{bananas {2} \test }");
+                output.Add(@"{1} {4}");
+                output.Add(@"\thing{bananas {2} on {3} }");
                 output.Add(@"\test{grow}");
+                output.Add(@"\blah");
                 output.Add(@"\otherThing{trees}");
 
                 Assert.AreEqual(o, output);

@@ -82,6 +82,7 @@ namespace TexWordCompiler
         }
 
         public static string RegexLine = @"\\([a-zA-Z]+)(\{(.+)\})?";
+        public static string RegexMacroLine = @"\\([a-zA-Z]+)";
 
         public string Title;
         public string Author;
@@ -191,13 +192,52 @@ namespace TexWordCompiler
             }
             r.Add(escapedLine);
 
-            MatchCollection match = Regex.Matches(escapedLine, RegexLine);
+            MatchCollection match = Regex.Matches(escapedLine, RegexMacroLine);
 
             int i = 1;
             foreach (Match m in match)
             {
-                r[0] = r[0].Replace(m.ToString(), "{" + i++ + "}");
-                r.Add(m.ToString());
+                //r[0] = r[0].Replace(m.ToString(), "{" + i++ + "}");
+                string result = m.ToString();
+                int nothing = escapedLine.IndexOf(result) + result.Length + 1;
+                char blah = escapedLine[escapedLine.IndexOf(result) + result.Length + 1];
+                if (escapedLine[escapedLine.IndexOf(result) + result.Length] == '{')
+                {
+                    int braces = 1, counter = escapedLine.IndexOf(result) + result.Length + 1;
+                    StringBuilder sb = new StringBuilder();
+                    while (braces > 0)
+                    {
+                        if (escapedLine[counter] == '{' && escapedLine[counter - 1] != '\\')
+                        {
+                            braces++;
+                        }
+                        else if (escapedLine[counter] == '}' && escapedLine[counter - 1] != '\\')
+                        {
+                            braces--;
+                        }
+
+                        sb.Append(escapedLine[counter++]);
+                    }
+
+                    result += "{" + sb.ToString();
+                }
+
+                if (escapedLine.Contains(result))
+                {
+                    r.Add(result);
+                    r[0] = r[0].Replace(result, "{" + i++ + "}");
+                }
+            }
+
+            for (int a = 1; a < r.Count; a++)
+            {
+                for (int b = a + 1; b < r.Count; b++)
+                {
+                    if (r[a].Contains(r[b]))
+                    {
+                        r[a] = r[a].Replace(r[b], "{" + b + "}");
+                    }
+                }
             }
 
             return r;
@@ -206,14 +246,14 @@ namespace TexWordCompiler
         public static string ReplaceTeX(string line)
         {
             string text = line;
-            string regexPattern = @"\\([a-zA-Z]+)(\{([a-zA-Z]+)\})?";
+            //string RegexLine = @"\\([a-zA-Z]+)(\{([a-zA-Z]+)\})?";
             if (Macros != null && Macros.ContainsKey(line))
             {
                 text = ReplaceTeX(Macros[line]);
             }
-            else if (Regex.IsMatch(text, regexPattern))
+            else if (Regex.IsMatch(text, RegexLine))
             {
-                MatchCollection ms = Regex.Matches(text, regexPattern);
+                MatchCollection ms = Regex.Matches(text, RegexLine);
 
                 foreach (Match m in ms)
                 {
