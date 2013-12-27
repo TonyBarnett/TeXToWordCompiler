@@ -81,8 +81,12 @@ namespace TexWordCompiler
             }
         }
 
-        public static string RegexLine = @"\\([a-zA-Z]+)(\{(.+)\})?";
-        public static string RegexMacroLine = @"\\([a-zA-Z]+)";
+        /// <summary>
+        /// \type[optional]{value}
+        /// </summary>
+        public static string RegexLine = @"\\(?<type>\w+)\s*(\[(?<optional>[^\{\}]+)\])?\s*(?:(\{(?<value>[^\{\}]+)\}))*";
+
+        public static string RegexMacroLine = @"\\(\w+)";
 
         public string Title;
         public string Author;

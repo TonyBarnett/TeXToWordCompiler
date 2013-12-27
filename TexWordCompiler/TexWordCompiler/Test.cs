@@ -202,5 +202,26 @@ namespace TexWordCompiler
                 f.Delete();
             }
         }
+
+        [Test]
+        public void ReadTeXImage()
+        {
+            string text = @"\begin{figure}%[H] % Direct comparison between PAS2050 and @UK footprints.
+                    \includegraphics[width=\textwidth]{directCompare.pdf}\makeatletter
+                    \caption[Direct comparison between PAS2050 and @UK footprints.]
+                        {Plot of  @UK carbon footprints against PAS2050 carbon footprint of a product. Line of best fit,
+                        calculated using linear regression, is plotted for reference.}\makeatother
+                    \label{fig:directCompare}
+                \end{figure}";
+
+            Diagram d = new Diagram(text);
+
+            Dictionary<string, List<string>> caption = new Dictionary<string, List<string>>();
+            caption.Add("Plot of @UK carbon footprints against PAS2050 carbon footprint of a product. Line of best fit, calculated using linear regression, is plotted for reference.", new List<string>());
+            caption["Plot of @UK carbon footprints against PAS2050 carbon footprint of a product. Line of best fit, calculated using linear regression, is plotted for reference."].Add("Direct comparison between PAS2050 and @UK footprints.");
+            Assert.AreEqual(d.Number, 1);
+            Assert.AreEqual(d.Label[0], "fig:directCompare");
+            Assert.AreEqual(d.Caption, caption);
+        }
     }
 }
