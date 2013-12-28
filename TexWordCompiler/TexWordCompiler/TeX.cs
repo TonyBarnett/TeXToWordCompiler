@@ -84,7 +84,7 @@ namespace TexWordCompiler
         /// <summary>
         /// \type[optional]{value}
         /// </summary>
-        public static string RegexLine = @"\\(?<type>\w+)\s*(\[(?<optional>[^\{\}]+)\])?\s*(?:(\{(?<value>[^\{\}]+)\}))*";
+        public static string RegexLine = @"\\(?<type>\w+)\s*(\[(?<optional>[^\{\}]+)\])?\s*(?:(\{(?<value>(?:.|\n|\r)+)\}))*";
 
         public static string RegexMacroLine = @"\\(\w+)";
 
@@ -265,6 +265,47 @@ namespace TexWordCompiler
             }
 
             return "";
+        }
+
+        /// <summary>
+        /// returns the value of
+        /// </summary>
+        /// <param name="TeX"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static List<string> GetTeXPart(string teX, string type, char openBrace = '{', char closeBrace = '}', char escape = '\\')
+        {
+            StringBuilder sb = new StringBuilder();
+            int braces = 1;
+
+            if (!teX.Contains(type))
+            {
+                throw new Exception("'" + type + "'" + " can't be found in " + "'" + teX + "'");
+            }
+
+            string[] temps = teX.Replace(type, "¬").Split('¬');
+
+            List<string> result = new List<string>();
+            foreach (string temp in temps.Skip(1))
+            {
+                string t = temp.Substring(temp.IndexOf(openBrace) + 1);
+                int i = 0;
+                while (braces > 0)
+                {
+                    if (t[i] == openBrace && t[i - 1] != escape)
+                    {
+                        braces++;
+                    }
+
+                    if (t[i] == closeBrace && t[i - 1] != escape)
+                    {
+                        braces--;
+                    }
+                    sb.Append(t[i++]);
+                }
+                result.Add(sb.ToString().Substring(0, sb.Length - 1).Trim());
+            }
+            return result;
         }
     }
 }

@@ -204,7 +204,7 @@ namespace TexWordCompiler
         }
 
         [Test]
-        public void ReadTeXImage()
+        public void ReadTeXFigure()
         {
             string text = @"\begin{figure}%[H] % Direct comparison between PAS2050 and @UK footprints.
                     \includegraphics[width=\textwidth]{directCompare.pdf}\makeatletter
@@ -219,8 +219,47 @@ namespace TexWordCompiler
             Dictionary<string, List<string>> caption = new Dictionary<string, List<string>>();
             caption.Add("Plot of @UK carbon footprints against PAS2050 carbon footprint of a product. Line of best fit, calculated using linear regression, is plotted for reference.", new List<string>());
             caption["Plot of @UK carbon footprints against PAS2050 carbon footprint of a product. Line of best fit, calculated using linear regression, is plotted for reference."].Add("Direct comparison between PAS2050 and @UK footprints.");
-            Assert.AreEqual(d.Number, 1);
             Assert.AreEqual(d.Label[0], "fig:directCompare");
+            Assert.AreEqual(d.Caption, caption);
+        }
+
+        [Test]
+        public void ReadTeXSubfigures()
+        {
+            string text = @"\begin{figure}%[ht!]
+	            \subfigure[]
+	            {
+		            \includegraphics[width=.45\textwidth]{SpectralClustering1.pdf}
+	            }
+	            \qquad
+	            \subfigure[]
+	            {
+		            \includegraphics[width=.45\textwidth]{SpectralClustering2.pdf}
+	            }
+	            \subfigure[]
+	            {
+		            \includegraphics[width=.45\textwidth]{SpectralClustering3.pdf}
+	            }
+	            \qquad
+	            \subfigure[]
+	            {
+		            \includegraphics[width=.45\textwidth]{SpectralClustering4.pdf}
+	            }
+	            \caption[Spectral clustering in two dimensions using ratios as similarity function.]
+		            {results of spectral clustering when applied to usable data set using similarity matrix,
+		            $A$, defined in equation \eqref{eq:specClustRatio} to define the similarity function. The
+		            graphs show the eigenvectors that correspond to the two lowest eigenvalues. the different
+		            colours and marker styles represent different clusters.
+		            }
+	            \label{fig:specClust2d}
+            \end{figure}";
+
+            Diagram d = new Diagram(text);
+
+            Dictionary<string, List<string>> caption = new Dictionary<string, List<string>>();
+            caption.Add(@"results of spectral clustering when applied to usable data set using similarity matrix, $A$, defined in equation \eqref{eq:specClustRatio} to define the similarity function. The graphs show the eigenvectors that correspond to the two lowest eigenvalues. the different colours and marker styles represent different clusters.", new List<string>());
+            caption[@"results of spectral clustering when applied to usable data set using similarity matrix, $A$, defined in equation \eqref{eq:specClustRatio} to define the similarity function. The graphs show the eigenvectors that correspond to the two lowest eigenvalues. the different colours and marker styles represent different clusters."].Add("Spectral clustering in two dimensions using ratios as similarity function.");
+            Assert.AreEqual(d.Label[0], "fig:specClust2d");
             Assert.AreEqual(d.Caption, caption);
         }
     }

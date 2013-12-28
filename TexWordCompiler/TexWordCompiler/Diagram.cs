@@ -42,34 +42,20 @@ namespace TexWordCompiler
             Caption = new Dictionary<string, List<string>>();
             Label = new List<string>();
             string line = teX.Replace("\n", "").Replace("\r", "");
-            MatchCollection mc = Regex.Matches(teX.Replace("\n", "").Replace("\r", ""), TeX.RegexLine);
-            foreach (Match m in mc)
+            line = Regex.Replace(line, "\\s+", " ");
+
+            List<string> optionalCaption = TeX.GetTeXPart(line, "caption", '[', ']');
+
+            foreach (string file in TeX.GetTeXPart(line, "includegraphics"))
             {
-                string t = m.Groups["type"].ToString().Trim();
-                string v = m.Groups["value"].ToString();
-                string o = m.Groups["optional"].ToString();
-                switch (m.Groups["type"].ToString().Trim())
-                {
-                    case "includegraphics":
-                        Files.Add(new FileInfo(m.Groups["value"].ToString()));
-                        break;
+                Files.Add(new FileInfo(file));
+            }
 
-                    case "caption":
-                        string c = Regex.Replace(m.Groups["value"].ToString(), "\\s+", " ");
-                        Caption.Add(c, new List<string>());
-                        if (m.Groups["optional"].Success)
-                        {
-                            Caption[c].Add(m.Groups["optional"].ToString());
-                        }
-                        break;
+            Label = TeX.GetTeXPart(line, "label");
 
-                    case "label":
-                        Label.Add(m.Groups["value"].ToString());
-                        break;
-
-                    default:
-                        break;
-                }
+            foreach (string c in TeX.GetTeXPart(line, "caption"))
+            {
+                Caption.Add(c, optionalCaption);
             }
         }
     }
