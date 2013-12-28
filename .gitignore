@@ -3,6 +3,10 @@
 *.tex
 *.suo
 *.ini
-Debug
-*.ini
-*.suo
+Debug/
+*.cahce
+*.log
+*.tlog
+*.settings
+*.resources
+*.txt

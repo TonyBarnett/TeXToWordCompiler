@@ -8,209 +8,265 @@ namespace TexWordCompiler
     [TestFixture]
     public class Test
     {
-        private string TempOutput = "C:\\Users\\Tony\\Desktop\\TexWordCompilerTestFiles\\Test";
+        //private string TempOutput = "C:\\Users\\Tony\\Desktop\\TexWordCompilerTestFiles\\Test";
+        //private string TempOutput = "C:\\Users\\TBarnett\\Desktop\\TexWordCompilerTestFiles\\Test";
+
+        //private string CrapDump = "";
 
         [Test]
-        public void Parser()
+        public void ParseLine()
         {
-            Reader.Line r = new Reader.Line();
-
-            r.ParseLine(@"\thing{bananas \test{grow} on \test } \otherThing{trees}");
-
-            List<string> output = new List<string>();
-            output.Add(@"{1} {3}");
-            output.Add(@"bananas {2} on test ");
-            output.Add(@"grow");
-            output.Add(@"trees");
-
-            List<string> type = new List<string>();
-            type.Add("thing");
-            type.Add("test");
-            type.Add("otherThing");
-
-            Assert.AreEqual(r.Output, output);
-            Assert.AreEqual(r.Type, type);
-        }
-
-        [Test]
-        public void LineIn() // finish me... I got too tired and a little bored last time
-        {
-            Reader.Line r = new Reader.Line();
-
-            DirectoryInfo dir = new DirectoryInfo("..\\");
-
-            FileInfo f = new FileInfo(String.Format("{0}Test.Tex", dir.FullName));
-
-            //f.Create();
-
-            using (StreamWriter w = new StreamWriter(f.FullName))
+            try
             {
-                w.WriteLine(@"an existing residential building. \emph{Building regulations part L2B} detail the measures ");
-                w.WriteLine(@"%comment line");
-                w.WriteLine(@"\thing{new-build development}{potato}");
-                w.WriteLine(@"\thing{trees}{with}[optional Monkeys]");
-
-            }
-
-            using (StreamReader sr = new StreamReader(f.FullName))
-            {
-                Dictionary<int, List<string>> outputs = new Dictionary<int, List<string>>();
-                Dictionary<int, List<string>> type = new Dictionary<int, List<string>>();
-                Dictionary<int, List<string>> parameters = new Dictionary<int, List<string>>();
-                Dictionary<int, List<string>> optionals = new Dictionary<int, List<string>>();
-
-
-                while (!sr.EndOfStream)
+                string line = @"\thing{bananas \test{grow} on \blah } \otherThing{trees}";
+                using (StreamWriter w = new StreamWriter("ParseLine.Tex"))
                 {
-                    r.GetNextBlock(sr);
-
+                    w.WriteLine(line);
                 }
+
+                Reader r = new Reader("ParseLine.Tex");
+
+                List<string> o = r.ParseLine();
+
+                List<string> output = new List<string>();
+                output.Add(@"{1} {4}");
+                output.Add(@"\thing{bananas {2} on {3} }");
+                output.Add(@"\test{grow}");
+                output.Add(@"\blah");
+                output.Add(@"\otherThing{trees}");
+
+                Assert.AreEqual(o, output);
+                //Assert.AreEqual(r.Type, type);
             }
-            f.Delete();
-        }
-
-        [Test]
-        public void MakeSimpleDocument()
-        {
-            DirectoryInfo dir = new DirectoryInfo(TempOutput);
-            OutputFiles.WordDocument w = new OutputFiles.WordDocument(dir);
-
-            w.AddLine("test Line");
-
-            w.End();
-            //using (OutputFiles.FontTable f = new OutputFiles.FontTable(dir)) ;
-            //using (OutputFiles.WebSettings w = new OutputFiles.WebSettings(dir)) ;
-        }
-
-        [Test]
-        public void MakeFontTable()
-        {
-            DirectoryInfo dir = new DirectoryInfo(TempOutput);
-            OutputFiles.FontTable f = new OutputFiles.FontTable(dir);
-        }
-
-        [Test]
-        public void MakeWebSettings()
-        {
-            DirectoryInfo dir = new DirectoryInfo(TempOutput);
-            OutputFiles.WebSettings w = new OutputFiles.WebSettings(dir);
-        }
-
-        [Test]
-        public void MakeSettings()
-        {
-            DirectoryInfo dir = new DirectoryInfo(TempOutput);
-            OutputFiles.Settings w = new OutputFiles.Settings(dir);
-        }
-
-        [Test]
-        public void MakeApp()
-        {
-            DirectoryInfo dir = new DirectoryInfo(TempOutput);
-            OutputFiles.App w = new OutputFiles.App(dir);
-        }
-
-        [Test]
-        public void MakeCore()
-        {
-            DirectoryInfo dir = new DirectoryInfo(TempOutput);
-            OutputFiles.Core w = new OutputFiles.Core(dir);
-        }
-
-        [Test]
-        public void MakeStyle()
-        {
-            DirectoryInfo dir = new DirectoryInfo(TempOutput);
-            OutputFiles.Styles w = new OutputFiles.Styles(dir);
-        }
-
-        [Test]
-        public void MakeRels()
-        {
-            DirectoryInfo dir = new DirectoryInfo(TempOutput);
-            OutputFiles.Rels w = new OutputFiles.Rels(dir);
-        }
-
-        [Test]
-        public void MakeContentType()
-        {
-            DirectoryInfo dir = new DirectoryInfo(TempOutput);
-
-            Dictionary<string, string> defaults = new Dictionary<string, string>();
-            defaults.Add("rels", "application/vnd.openxmlformats-package.relationships+xml");
-            defaults.Add("xml", "application/xml");
-
-            Dictionary<string, string> partNames = new Dictionary<string, string>();
-
-            partNames.Add("/word/document.xml", "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml");
-            partNames.Add("/word/styles.xml", "application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml");
-            partNames.Add("/docProps/app.xml", "application/vnd.openxmlformats-officedocument.extended-properties+xml");
-            partNames.Add("/word/settings.xml", "application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml");
-            partNames.Add("/word/theme/theme1.xml", "application/vnd.openxmlformats-officedocument.theme+xml");
-            partNames.Add("/word/fontTable.xml", "application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml");
-            partNames.Add("/word/webSettings.xml", "application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml");
-            partNames.Add("/docProps/core.xml", "application/vnd.openxmlformats-package.core-properties+xml");
-
-            OutputFiles.ContentType f = new OutputFiles.ContentType(dir, defaults, partNames);
-        }
-
-        [Test]
-        public void MakeDocumentRels()
-        {
-            DirectoryInfo dir = new DirectoryInfo(TempOutput);
-
-            OutputFiles.documentXmlRels f = new OutputFiles.documentXmlRels(dir);
-        }
-
-        [Test]
-        public void MakeTheme()
-        {
-            DirectoryInfo dir = new DirectoryInfo(TempOutput);
-            OutputFiles.Theme w = new OutputFiles.Theme(dir);
-        }
-
-        [Test]
-        public void MakeTestOutput()
-        {
-            MakeFontTable();
-            MakeTheme();
-            MakeApp();
-            MakeCore();
-            MakeSettings();
-            MakeWebSettings();
-            MakeStyle();
-            MakeRels();
-            MakeContentType();
-            MakeDocumentRels();
-
-            Zip();
-        }
-
-        [Test]
-        public void Zip()
-        {
-            //DirectoryInfo dir = new DirectoryInfo(@"C:\\Users\\Tony\\Desktop\\test_docx");
-            DirectoryInfo dir = new DirectoryInfo(TempOutput);
-            DirectoryInfo outputDir = new DirectoryInfo(TempOutput);
-            ZipFiles z = new ZipFiles(outputDir);
-
-
-            List<DirectoryInfo> dirs = new List<DirectoryInfo>();
-            dirs.Add(new DirectoryInfo(dir + "\\_rels"));
-            dirs.Add(new DirectoryInfo(dir + "\\docProps"));
-            dirs.Add(new DirectoryInfo(dir + "\\word"));
-
-            FileInfo f = new FileInfo(dir.FullName + @"\\[Content_Types].xml");
-
-            z.AddFile(f);
-
-
-            foreach(DirectoryInfo d in dirs)
+            finally
             {
-                z.AddFolder(d);
-            }
+                FileInfo f = new FileInfo("ParseLine.TeX");
 
-            z.Zip();
+                f.Delete();
+            }
+        }
+
+        [Test]
+        public void LineIn()
+        {
+            string line = "let's get TeXy with \\things and \\textbf{otherThings}% Complete with commenty goodness \\% % ahoyhoy";
+            List<string> o = new List<string>();
+            List<string> output = TeX.ReadLine(line);
+
+            o.Add("let's get TeXy with {1} and {2}");
+            o.Add("\\things");
+            o.Add("\\textbf{otherThings}");
+
+            Assert.AreEqual(output, o);
+        }
+
+        [Test]
+        public void EscapedCommentChar()
+        {
+            List<string> line = TeX.ReadLine(@"This is a line with an escaped \% in it. % not kidding");
+            List<string> correctLine = new List<string>();
+
+            correctLine.Add(@"This is a line with an escaped % in it. ");
+
+            Assert.AreEqual(line, correctLine);
+        }
+
+        [Test]
+        public void AddParagraph()
+        {
+            Novacode.DocX d = Novacode.DocX.Create("thing.docx");
+            List<List<string>> p = new List<List<string>>();
+
+            p.Add(new List<string>());
+            p[0].Add("let's get TeXy with {1} and {2}");
+            p[0].Add("\\textbf{Bold bits}");
+            p[0].Add("\\textit{italic bits}");
+            WordifyThings.AddParagraph(p, d);
+
+            d.Save();
+        }
+
+        [Test]
+        public void ReplaceTex()
+        {
+            List<string> tex = new List<string>();
+            tex.Add(@"This is {1} line with a citation {2}");
+            tex.Add(@"\\textbf{a tex}");
+            tex.Add(@"\\cite{person}");
+
+            for (int i = 1; i < tex.Count; i++)
+            {
+                string output = TeX.ReplaceTeX(tex[i]);
+            }
+        }
+
+        [Test]
+        public void rlapTest()
+        {
+            Novacode.DocX d = Novacode.DocX.Create(@"rlap.docx");
+            List<List<string>> tex = new List<List<string>>();
+
+            tex.Add(new List<string>());
+
+            tex[0].Add("`This is a quoted sentence{0}");
+            tex[0].Add("\\rlap{.}{'}");
+
+            WordifyThings.AddParagraph(tex, d);
+            d.Save();
+        }
+
+        [Test]
+        public void GetAuthorYearFromRefernceFile()
+        {
+            try
+            {
+                using (StreamWriter w = new StreamWriter(@"blah.bib"))
+                {
+                    w.WriteLine(@"Automatically generated by Mendeley Desktop 1.10.1");
+                    w.WriteLine(@"Any changes to this file will be lost if it is regenerated by Mendeley.");
+                    w.WriteLine(@"BibTeX export options can be customized via Options -> BibTeX in Mendeley Desktop");
+
+                    w.WriteLine(@"@article{Leontief1936,");
+                    w.WriteLine(@"author = {Leontief, Wassily W},");
+                    w.WriteLine(@"file = {:E$\backslash$:/uni stuff/Papers/Leontief/Leontief\_1936\_Quantitative input and output relations in the economic systems of the United States.pdf:pdf},");
+                    w.WriteLine(@"journal = {The Review of economics and Statistics},");
+                    w.WriteLine(@"number = {3},");
+                    w.WriteLine(@"pages = {105--125},");
+                    w.WriteLine(@"title = {{Quantitative input and output relations in the economic systems of the United States}},");
+                    w.WriteLine(@"url = {http://www.jstor.org/stable/10.2307/1927837},");
+                    w.WriteLine(@"volume = {18},");
+                    w.WriteLine(@"year = {1936}");
+                    w.WriteLine(@"}");
+
+                    w.WriteLine(@"@book{AmericaClimateChange2010,");
+                    w.WriteLine(@"author = {{America's Climate Choices} and {Panel on Advancing the Science of Climate Change} and {National Research Council}},");
+                    w.WriteLine(@"isbn = {9780309145886},");
+                    w.WriteLine(@"pages = {1},");
+                    w.WriteLine(@"publisher = {The National Academies Press},");
+                    w.WriteLine(@"title = {{Advancing the Science of Climate Change}},");
+                    w.WriteLine(@"url = {http://www.nap.edu/openbook.php?record\_id=12782},");
+                    w.WriteLine(@"year = {2010}");
+                    w.WriteLine(@"}");
+                }
+
+                References r = new References(new FileInfo(@"blah.bib"));
+
+                string ay1 = r.GetAuthorYear("Leontief1936");
+                string ay2 = r.GetAuthorYear("AmericaClimateChange2010");
+
+                Assert.AreEqual(ay1, "Leontief, Wassily W, 1936");
+                Assert.AreEqual(ay2, @"{America's Climate Choices} and {Panel on Advancing the Science of Climate Change} and {National Research Council}, 2010");
+            }
+            finally
+            {
+                // No matter what happens we clean up after ourselves.
+                FileInfo f = new FileInfo("blah.bib");
+                f.Delete();
+            }
+        }
+
+        [Test]
+        public void GetJournalRefernce()
+        {
+            try
+            {
+                using (StreamWriter w = new StreamWriter("blah.bib"))
+                {
+                    w.WriteLine(@"Automatically generated by Mendeley Desktop 1.10.1");
+                    w.WriteLine(@"Any changes to this file will be lost if it is regenerated by Mendeley.");
+                    w.WriteLine(@"BibTeX export options can be customized via Options -> BibTeX in Mendeley Desktop");
+
+                    w.WriteLine(@"@article{Joshi2000,");
+                    w.WriteLine(@"author = {Joshi, Satish},");
+                    w.WriteLine(@"file = {:E$\backslash$:/uni stuff/Papers/Joshi/Joshi\_2000\_Life-Cycle Assessment Using Input-Output Techniques.pdf:pdf},");
+                    w.WriteLine(@"journal = {Journal of Industrial Ecology},");
+                    w.WriteLine(@"keywords = {automobile fuel tanks,design for environment,dfe,input-output analysis},");
+                    w.WriteLine(@"number = {2},");
+                    w.WriteLine(@"pages = {95--120},");
+                    w.WriteLine(@"title = {{Life-Cycle Assessment Using Input-Output Techniques}},");
+                    w.WriteLine(@"volume = {3},");
+                    w.WriteLine(@"year = {2000}");
+                    w.WriteLine(@"}");
+                }
+
+                References r = new References(new FileInfo(@"blah.bib"));
+
+                Dictionary<int, List<References.RefPartStyle>> style = new Dictionary<int, List<References.RefPartStyle>>();
+
+                style.Add(2, new List<References.RefPartStyle>());
+                style[2].Add(References.RefPartStyle.RoundBrackets);
+                style[2].Add(References.RefPartStyle.Italic);
+
+                r.AddRefStylePart(References.RefType.article, new List<string>() { "author", "year", "title", "volume", "number" }, style);
+                string reference = r.GetReference("Joshi2000");
+
+                Assert.AreEqual(reference, "Joshi, Satish, 2000, {Life-Cycle Assessment Using Input-Output Techniques}, 3, 2");
+            }
+            finally
+            {
+                FileInfo f = new FileInfo("blah.bib");
+                f.Delete();
+            }
+        }
+
+        [Test]
+        public void ReadTeXFigure()
+        {
+            string text = @"\begin{figure}%[H] % Direct comparison between PAS2050 and @UK footprints.
+                    \includegraphics[width=\textwidth]{directCompare.pdf}\makeatletter
+                    \caption[Direct comparison between PAS2050 and @UK footprints.]
+                        {Plot of  @UK carbon footprints against PAS2050 carbon footprint of a product. Line of best fit,
+                        calculated using linear regression, is plotted for reference.}\makeatother
+                    \label{fig:directCompare}
+                \end{figure}";
+
+            Diagram d = new Diagram(text);
+
+            Dictionary<string, List<string>> caption = new Dictionary<string, List<string>>();
+            caption.Add("Plot of @UK carbon footprints against PAS2050 carbon footprint of a product. Line of best fit, calculated using linear regression, is plotted for reference.", new List<string>());
+            caption["Plot of @UK carbon footprints against PAS2050 carbon footprint of a product. Line of best fit, calculated using linear regression, is plotted for reference."].Add("Direct comparison between PAS2050 and @UK footprints.");
+            Assert.AreEqual(d.Label[0], "fig:directCompare");
+            Assert.AreEqual(d.Caption, caption);
+        }
+
+        [Test]
+        public void ReadTeXSubfigures()
+        {
+            string text = @"\begin{figure}%[ht!]
+	            \subfigure[]
+	            {
+		            \includegraphics[width=.45\textwidth]{SpectralClustering1.pdf}
+	            }
+	            \qquad
+	            \subfigure[]
+	            {
+		            \includegraphics[width=.45\textwidth]{SpectralClustering2.pdf}
+	            }
+	            \subfigure[]
+	            {
+		            \includegraphics[width=.45\textwidth]{SpectralClustering3.pdf}
+	            }
+	            \qquad
+	            \subfigure[]
+	            {
+		            \includegraphics[width=.45\textwidth]{SpectralClustering4.pdf}
+	            }
+	            \caption[Spectral clustering in two dimensions using ratios as similarity function.]
+		            {results of spectral clustering when applied to usable data set using similarity matrix,
+		            $A$, defined in equation \eqref{eq:specClustRatio} to define the similarity function. The
+		            graphs show the eigenvectors that correspond to the two lowest eigenvalues. the different
+		            colours and marker styles represent different clusters.
+		            }
+	            \label{fig:specClust2d}
+            \end{figure}";
+
+            Diagram d = new Diagram(text);
+
+            Dictionary<string, List<string>> caption = new Dictionary<string, List<string>>();
+            caption.Add(@"results of spectral clustering when applied to usable data set using similarity matrix, $A$, defined in equation \eqref{eq:specClustRatio} to define the similarity function. The graphs show the eigenvectors that correspond to the two lowest eigenvalues. the different colours and marker styles represent different clusters.", new List<string>());
+            caption[@"results of spectral clustering when applied to usable data set using similarity matrix, $A$, defined in equation \eqref{eq:specClustRatio} to define the similarity function. The graphs show the eigenvectors that correspond to the two lowest eigenvalues. the different colours and marker styles represent different clusters."].Add("Spectral clustering in two dimensions using ratios as similarity function.");
+            Assert.AreEqual(d.Label[0], "fig:specClust2d");
+            Assert.AreEqual(d.Caption, caption);
         }
     }
 }
