@@ -191,7 +191,13 @@ namespace TexWordCompiler
 
                 References r = new References(new FileInfo(@"blah.bib"));
 
-                r.AddRefStylePart(References.RefType.article, new List<string>() { "author", "year", "title", "volume", "number" });
+                Dictionary<int, List<References.RefPartStyle>> style = new Dictionary<int, List<References.RefPartStyle>>();
+
+                style.Add(2, new List<References.RefPartStyle>());
+                style[2].Add(References.RefPartStyle.RoundBrackets);
+                style[2].Add(References.RefPartStyle.Italic);
+
+                r.AddRefStylePart(References.RefType.article, new List<string>() { "author", "year", "title", "volume", "number" }, style);
                 string reference = r.GetReference("Joshi2000");
 
                 Assert.AreEqual(reference, "Joshi, Satish, 2000, {Life-Cycle Assessment Using Input-Output Techniques}, 3, 2");
