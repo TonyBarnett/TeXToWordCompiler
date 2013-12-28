@@ -103,7 +103,7 @@ namespace TexWordCompiler
         [Test]
         public void rlapTest()
         {
-            Novacode.DocX d = Novacode.DocX.Create(@"T:\Google Drive\rlap.docx");
+            Novacode.DocX d = Novacode.DocX.Create(@"rlap.docx");
             List<List<string>> tex = new List<List<string>>();
 
             tex.Add(new List<string>());

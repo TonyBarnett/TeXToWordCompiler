@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -247,6 +248,11 @@ namespace TexWordCompiler
             return r;
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="line">A line in an output (\ie each line is either a single TeX command or a string.Format style string.</param>
+        /// <returns></returns>
         public static string ReplaceTeX(string line)
         {
             string text = line;
@@ -268,12 +274,12 @@ namespace TexWordCompiler
         }
 
         /// <summary>
-        /// returns the value of
+        /// returns the value of type from teX (based on a \type[optional]{value})
         /// </summary>
         /// <param name="TeX"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static List<string> GetTeXPart(string teX, string type, char openBrace = '{', char closeBrace = '}', char escape = '\\')
+        public static List<string> GetTeXPart(string teX, string type = "", char openBrace = '{', char closeBrace = '}', char escape = '\\')
         {
             StringBuilder sb = new StringBuilder();
             int braces = 1;
@@ -304,6 +310,79 @@ namespace TexWordCompiler
                     sb.Append(t[i++]);
                 }
                 result.Add(sb.ToString().Substring(0, sb.Length - 1).Trim());
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// returns the value of type from teX (based on a \type[optional]{value})
+        /// </summary>
+        /// <param name="TeX"></param>
+        /// <param name="type"></param>
+        /// <param name="numberOfValues">The number of values you want. Used for example for \\rlap{}{}.</param>
+        /// <returns></returns>
+        public static List<string> GetTeXPart(StreamReader teX, string type, char openBrace = '{', char closeBrace = '}', char escape = '\\', int numberOfValues = 1)
+        {
+            StringBuilder sb = new StringBuilder();
+            List<string> result = new List<string>();
+            int braces = 1;
+            int n = 0;
+            char c = new char();
+            char p = new char();
+            using (teX)
+            {
+                // We look through to find where type is.
+                while (!sb.ToString().Contains("\\" + type))
+                {
+                    // If we run out of stream then we complain.
+                    if (teX.EndOfStream)
+                    {
+                        throw new Exception("Couldn't find " + type);
+                    }
+
+                    sb.Append((char)teX.Read());
+                }
+                sb = new StringBuilder();
+
+                //Read to the first unescaped open brace.
+                while (c != openBrace || (c == openBrace && p == escape))
+                {
+                    p = c;
+                    c = (char)teX.Read();
+                }
+                // consume it.
+                teX.Read();
+                c = p = new char();
+                // Read until we have got as many values as we want.
+                while (braces > 0 && n < numberOfValues)
+                {
+                    p = c;
+                    c = (char)teX.Read();
+
+                    if (c == openBrace && p != escape)
+                    {
+                        braces++;
+                    }
+
+                    else if (c == closeBrace && p != escape)
+                    {
+                        braces--;
+                    }
+
+                    // If we've closed all braces we want to reset sb and
+                    // write everything to all it needs, we only do this if
+                    // we have something in sb to avoid empty results.
+                    if (braces == 0 && sb.Length > 0)
+                    {
+                        result.Add(sb.ToString());
+                        sb = new StringBuilder();
+                        n++;
+                    }
+                    else
+                    {
+                        sb.Append(c);
+                    }
+                }
             }
             return result;
         }
