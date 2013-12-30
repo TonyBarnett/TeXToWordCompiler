@@ -9,6 +9,25 @@ namespace TexWordCompiler
 {
     internal class References
     {
+        private Dictionary<RefType, Dictionary<RefPart, List<RefPartStyle>>> RefStyle;
+
+        private Dictionary<string, Dictionary<FileInfo, int>> _RefFiles;
+
+        #region Enums
+
+        public enum RefPartStyle
+        {
+            RoundBrackets,
+            SquareBrackets,
+            Braces,
+            LeadingColon,
+            LeadingSemiColon,
+            TrailingColon,
+            TrailingSemiColon,
+            Italic,
+            Bold,
+        }
+
         public enum RefType
         {
             article,
@@ -27,19 +46,51 @@ namespace TexWordCompiler
             unpublished,
         }
 
-        private Dictionary<RefType, List<string>> RefStyle;
+        public enum RefPart
+        {
+            address,
+            annote,
+            author,
+            booktitle,
+            chapter,
+            crossref,
+            edition,
+            editor,
+            eprint,
+            howpublished,
+            institution,
+            journal,
+            key,
+            month,
+            note,
+            number,
+            organization,
+            pages,
+            publisher,
+            school,
+            series,
+            title,
+            type,
+            url,
+            volume,
+            year,
+        }
 
-        private Dictionary<string, Dictionary<FileInfo, int>> _RefFiles;
+        #endregion Enums
+
+        #region Constructor
 
         public References(FileInfo file)
         {
+            _RefFiles = new Dictionary<string, Dictionary<FileInfo, int>>();
+            RefStyle = new Dictionary<RefType, Dictionary<RefPart, List<RefPartStyle>>>();
             Init(file);
         }
 
         public References(List<FileInfo> files)
         {
             _RefFiles = new Dictionary<string, Dictionary<FileInfo, int>>();
-            RefStyle = new Dictionary<RefType, List<string>>();
+            RefStyle = new Dictionary<RefType, Dictionary<RefPart, List<RefPartStyle>>>();
 
             foreach (FileInfo f in files)
             {
@@ -47,12 +98,16 @@ namespace TexWordCompiler
             }
         }
 
-         private void Init(FileInfo file)
+        /// <summary>
+        /// Find all references in file and store them accordingly.
+        /// </summary>
+        /// <param name="file"></param>
+        private void Init(FileInfo file)
         {
-            // The plan is: read through the file, find alll the @s,
+            // The plan is: read through the file, find all the @s,
             // then store the key (@notThis{This,), the file name, and the position where we found the @
             _RefFiles = new Dictionary<string, Dictionary<FileInfo, int>>();
-            RefStyle = new Dictionary<RefType, List<string>>();
+            RefStyle = new Dictionary<RefType, Dictionary<RefPart, List<RefPartStyle>>>();
 
             using (StreamReader r = new StreamReader(file.FullName))
             {
@@ -92,17 +147,30 @@ namespace TexWordCompiler
             }
         }
 
+        #endregion Constructor
+
         /// <summary>
         /// Defines how the reference is printed and the order.
         /// </summary>
         /// <param name="refType"></param>
         /// <param name="parts"></param>
-        public void AddRefStylePart(RefType refType, List<string> parts)
+        public void AddRefStylePart(RefType refType, Dictionary<RefPart, List<References.RefPartStyle>> parts)
         {
-            RefStyle.Add(refType, new List<string>());
-            foreach (string s in parts)
+            if (!RefStyle.ContainsKey(refType))
             {
-                RefStyle[refType].Add(s);
+                RefStyle.Add(refType, new Dictionary<RefPart, List<RefPartStyle>>());
+            }
+            else
+            {
+                RefStyle[refType] = new Dictionary<RefPart, List<RefPartStyle>>();
+            }
+            foreach (RefPart s in parts.Keys)
+            {
+                RefStyle[refType].Add(s, new List<RefPartStyle>());
+                foreach (RefPartStyle p in parts[s])
+                {
+                    RefStyle[refType][s].Add(p);
+                }
             }
         }
 
@@ -126,11 +194,11 @@ namespace TexWordCompiler
 
             string reference = GetRefText(refKey);
 
-            string author = GetRefPart(reference, "author");
+            string author = GetRefPart(reference, References.RefPart.author);
 
-            if (!int.TryParse(GetRefPart(reference, "year"), out year))
+            if (!int.TryParse(GetRefPart(reference, References.RefPart.year), out year))
             {
-                throw new Exception(string.Format("cant make an integer out of {0}", GetRefPart(reference, "author")));
+                throw new Exception(string.Format("cant make an integer out of {0}", GetRefPart(reference, References.RefPart.author)));
             }
 
             return string.Format("{0}, {1}", author, year);
@@ -148,10 +216,20 @@ namespace TexWordCompiler
                 throw new Exception("invalid type " + type.ToString());
             }
 
-            foreach (string s in RefStyle[type])
+            foreach (RefPart s in RefStyle[type].Keys)
             {
-                sb.Append(GetRefPart(reference, s));
-                sb.Append(", ");
+                string r = GetRefPart(reference, s);
+                foreach (RefPartStyle p in RefStyle[type][s])
+                {
+                    r = StyleRefPart(r, p);
+                }
+
+                sb.Append(r);
+
+                if (!RefStyle[type][s].Contains(RefPartStyle.TrailingColon) && !RefStyle[type][s].Contains(RefPartStyle.TrailingSemiColon))
+                {
+                    sb.Append(", ");
+                }
             }
             if (sb.Length == 0)
             {
@@ -233,11 +311,11 @@ namespace TexWordCompiler
         /// </summary>
         /// <param name="referenceString">A bibTeX reference</param>
         /// <returns></returns>
-        private string GetRefPart(string referenceString, string part)
+        private string GetRefPart(string referenceString, RefPart part)
         {
             StringBuilder sb = new StringBuilder();
 
-            referenceString = referenceString.Substring(referenceString.IndexOf(part) + part.Length);
+            referenceString = referenceString.Substring(referenceString.IndexOf(part.ToString()) + part.ToString().Length);
             referenceString = referenceString.Substring(referenceString.IndexOf('{') + 1);
 
             int braces = 1, i = 0;
@@ -248,7 +326,7 @@ namespace TexWordCompiler
                 {
                     braces++;
                 }
-                if (referenceString[i] == '}')
+                else if (referenceString[i] == '}')
                 {
                     braces--;
                 }
@@ -259,6 +337,31 @@ namespace TexWordCompiler
             }
 
             return sb.ToString();
+        }
+
+        private string StyleRefPart(string reference, RefPartStyle style)
+        {
+            switch (style)
+            {
+                case RefPartStyle.RoundBrackets:
+                    return "(" + reference + ")";
+                case RefPartStyle.SquareBrackets:
+                    return "[" + reference + "]";
+                case RefPartStyle.Braces:
+                    return "{" + reference + "}";
+                case RefPartStyle.LeadingColon:
+                    return ":" + reference;
+                case RefPartStyle.LeadingSemiColon:
+                    return ";" + reference;
+                case RefPartStyle.TrailingColon:
+                    return reference + ":";
+                case RefPartStyle.TrailingSemiColon:
+                    return reference + ";";
+                case RefPartStyle.Italic:
+                case RefPartStyle.Bold:
+                    return reference;
+            }
+            throw new Exception("can't find " + style.ToString());
         }
     }
 }

@@ -191,16 +191,21 @@ namespace TexWordCompiler
 
                 References r = new References(new FileInfo(@"blah.bib"));
 
-                Dictionary<int, List<References.RefPartStyle>> style = new Dictionary<int, List<References.RefPartStyle>>();
+                Dictionary<References.RefPart, List<References.RefPartStyle>> style = new Dictionary<References.RefPart, List<References.RefPartStyle>>();
 
-                style.Add(2, new List<References.RefPartStyle>());
-                style[2].Add(References.RefPartStyle.RoundBrackets);
-                style[2].Add(References.RefPartStyle.Italic);
+                style.Add(References.RefPart.author, new List<References.RefPartStyle>());
+                style.Add(References.RefPart.year, new List<References.RefPartStyle>());
+                style.Add(References.RefPart.title, new List<References.RefPartStyle>());
+                style.Add(References.RefPart.volume, new List<References.RefPartStyle>());
+                style.Add(References.RefPart.number, new List<References.RefPartStyle>());
+                style[References.RefPart.year].Add(References.RefPartStyle.RoundBrackets);
+                style[References.RefPart.title].Add(References.RefPartStyle.Braces);
+                style[References.RefPart.volume].Add(References.RefPartStyle.TrailingColon);
 
-                r.AddRefStylePart(References.RefType.article, new List<string>() { "author", "year", "title", "volume", "number" }, style);
+                r.AddRefStylePart(References.RefType.article, style);
                 string reference = r.GetReference("Joshi2000");
 
-                Assert.AreEqual(reference, "Joshi, Satish, 2000, {Life-Cycle Assessment Using Input-Output Techniques}, 3, 2");
+                Assert.AreEqual(reference, "Joshi, Satish, (2000), {{Life-Cycle Assessment Using Input-Output Techniques}}, 3:2");
             }
             finally
             {
