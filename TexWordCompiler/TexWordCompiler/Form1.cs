@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 using System.Threading;
-using System.IO;
+using System.Windows.Forms;
 using Xml;
 
 namespace TexWordCompiler
@@ -26,7 +26,6 @@ namespace TexWordCompiler
 
         private void button1_Click(object sender, EventArgs e)
         {
-
         }
 
         private void textBox1_DragEnter(object sender, DragEventArgs e)
@@ -88,9 +87,10 @@ namespace TexWordCompiler
         private void MainLoop()
         {
             FileInfo f = new FileInfo(textBox1.Text);
-            Output o = new Output(f.FullName, string.Format("{0}\\{1}",f.Directory.FullName, f.Name));
-            Thread t = new Thread(new ThreadStart(o.Run));
-            t.Start();
+            using (Reader r = new Reader(f.FullName))
+            {
+                r.ParseHeader();
+            }
         }
     }
 }
