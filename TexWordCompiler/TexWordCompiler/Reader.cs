@@ -12,42 +12,31 @@ namespace TexWordCompiler
     {
         private TeX _Tex;
 
-        /// <summary>
-        /// Strip any escaped special characters from a string. Useful if you want
-        /// to count true open and close braces for instance.
-        /// </summary>
-        /// <param name="line">a TeX line.</param>
-        /// <returns>a nonTeX line.</returns>
-        private string EscapelessLine(string line)
-        {
-            return line.Replace("\\\\", "").Replace("\\{", "").Replace("\\}", "").Replace("\\[", "").Replace("\\]", "");
-        }
-
         public Reader(string fileName)
             : base(fileName)
         {
             _Tex = new TeX();
         }
 
-        public void ParseHeader(Stream s)
+        public void ParseHeader()
         {
             #region Regexs
 
             // \thing{blah}
-            string regexPattern = @"\\\{w+}\{{\w+}\}";
+            string regexPattern = @"\\(w+)\{(\w+)\}";
             //\thing[optionalBlah]{blah}
-            string regexPatternOptionals = @"\\\{w+}\[{\w+}\]\{{\w+}\}";
+            string regexPatternOptionals = @"\\(\w+)\[(\w+)\]\{(\w+)\}";
             //\thing{blah1}{blah2}
-            string regexPatternMacro = @"\\\{w+}\{{\w+}\}\{{\w+}\}";
+            string regexPatternMacro = @"\\(\w+)\{(\w+)\}\{(\w+)\}";
             //\thing
-            string regexPatternNoParams = @"\\{\w+}";
+            string regexPatternNoParams = @"\\(\w+)";
 
             #endregion Regexs
 
             bool done = false; // keep reading header information until I say so!
 
             // Let us begin...
-            using (StreamReader r = new StreamReader(s))
+            using (StreamReader r = this)
             {
                 StringBuilder sb = new StringBuilder();
 
@@ -62,8 +51,9 @@ namespace TexWordCompiler
                     }
 
                     // We need to make sure we have the whole statement.
-                    while (EscapelessLine(line).Split('{').Length + EscapelessLine(line).Split('[').Length !=
-                        EscapelessLine(line).Split('}').Length + EscapelessLine(line).Split(']').Length)
+                    while (line.Replace("\n", "").Replace("\r", "").Replace(" ", "").Length > 0 ||
+                        (TeX.Count(line, new List<char>() { '{', '[' })
+                            != TeX.Count(line, new List<char>() { '}', ']' })))
                     {
                         line += r.ReadLine();
                     }
@@ -71,7 +61,7 @@ namespace TexWordCompiler
                     // Let's remove any newLine characters.
                     line.Replace("\n", "").Replace("\r", "");
 
-                    while (line[0] == '%')
+                    while (!r.EndOfStream && line[0] == '%')
                     {
                         line = ReadLine();
                     }
