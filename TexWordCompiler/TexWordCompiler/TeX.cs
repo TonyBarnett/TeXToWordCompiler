@@ -281,9 +281,6 @@ namespace TexWordCompiler
         /// <returns></returns>
         public static List<string> GetTeXPart(string teX, string type = "", char openBrace = '{', char closeBrace = '}', char escape = '\\')
         {
-            StringBuilder sb = new StringBuilder();
-            int braces = 1;
-
             if (!teX.Contains(type))
             {
                 throw new Exception("'" + type + "'" + " can't be found in " + "'" + teX + "'");
@@ -294,8 +291,12 @@ namespace TexWordCompiler
             List<string> result = new List<string>();
             foreach (string temp in temps.Skip(1))
             {
+                StringBuilder sb = new StringBuilder();
+                int braces = 1;
+
                 string t = temp.Substring(temp.IndexOf(openBrace) + 1);
                 int i = 0;
+
                 while (braces > 0)
                 {
                     if (t[i] == openBrace && t[i - 1] != escape)
@@ -385,6 +386,30 @@ namespace TexWordCompiler
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Counts the number of instances of all characters in expressions that aren't escaped.
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="expressions"></param>
+        /// <param name="escape"></param>
+        /// <returns></returns>
+        public static int Count(string line, List<char> expressions, char escape = '\\')
+        {
+            int number = 0;
+            char p = new char();
+            foreach (char c in line)
+            {
+                if (p != escape && expressions.Contains(c))
+                {
+                    number++;
+                }
+
+                p = c;
+            }
+
+            return number;
         }
     }
 }
