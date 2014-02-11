@@ -7,6 +7,10 @@ using System.Text.RegularExpressions;
 
 namespace TexWordCompiler
 {
+    /// <summary>
+    /// Stores a reference, including its styling (choose from a predefined list).
+    /// It would be nice to have default styles built in somewhere but that'll come later.
+    /// </summary>
     internal class References
     {
         private Dictionary<RefType, Dictionary<RefPart, List<RefPartStyle>>> RefStyle;

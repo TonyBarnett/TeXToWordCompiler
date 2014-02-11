@@ -230,13 +230,17 @@ namespace TexWordCompiler
             Dictionary<string, List<string>> caption = new Dictionary<string, List<string>>();
             caption.Add("Plot of @UK carbon footprints against PAS2050 carbon footprint of a product. Line of best fit, calculated using linear regression, is plotted for reference.", new List<string>());
             caption["Plot of @UK carbon footprints against PAS2050 carbon footprint of a product. Line of best fit, calculated using linear regression, is plotted for reference."].Add("Direct comparison between PAS2050 and @UK footprints.");
+
             Assert.AreEqual(d.Label[0], "fig:directCompare");
+
+            Assert.AreEqual(d.Files[0].FullName, new FileInfo("directCompare.pdf").FullName);
+
             Assert.AreEqual(d.Caption, caption);
         }
 
         [Test]
         public void ReadTeXSubfigures()
-        {
+        {// Need to plumb in subcaptions.
             string text = @"\begin{figure}%[ht!]
 	            \subfigure[]
 	            {
@@ -271,6 +275,11 @@ namespace TexWordCompiler
             caption.Add(@"results of spectral clustering when applied to usable data set using similarity matrix, $A$, defined in equation \eqref{eq:specClustRatio} to define the similarity function. The graphs show the eigenvectors that correspond to the two lowest eigenvalues. the different colours and marker styles represent different clusters.", new List<string>());
             caption[@"results of spectral clustering when applied to usable data set using similarity matrix, $A$, defined in equation \eqref{eq:specClustRatio} to define the similarity function. The graphs show the eigenvectors that correspond to the two lowest eigenvalues. the different colours and marker styles represent different clusters."].Add("Spectral clustering in two dimensions using ratios as similarity function.");
             Assert.AreEqual(d.Label[0], "fig:specClust2d");
+
+            Assert.AreEqual(d.Files[0].FullName, new FileInfo("SpectralClustering1.pdf").FullName);
+            Assert.AreEqual(d.Files[1].FullName, new FileInfo("SpectralClustering2.pdf").FullName);
+            Assert.AreEqual(d.Files[2].FullName, new FileInfo("SpectralClustering3.pdf").FullName);
+            Assert.AreEqual(d.Files[3].FullName, new FileInfo("SpectralClustering4.pdf").FullName);
             Assert.AreEqual(d.Caption, caption);
         }
     }
