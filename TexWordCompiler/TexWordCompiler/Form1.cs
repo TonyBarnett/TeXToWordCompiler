@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Threading;
 using System.IO;
-using Xml;
+//using Xml;
 
 namespace TexWordCompiler
 {

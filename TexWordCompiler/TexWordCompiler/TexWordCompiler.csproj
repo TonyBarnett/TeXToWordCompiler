@@ -119,12 +119,6 @@
     <Content Include="Xml.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Google Drive\Repository\Xml\Xml\Xml.csproj">
-      <Project>{AEC34151-BC94-409A-A637-A064EDA4E223}</Project>
-      <Name>Xml</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
